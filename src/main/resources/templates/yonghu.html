@@ -184,13 +184,9 @@
     <div id="user-management-content">
         <h2>ユーザー管理</h2>
         <div>
-            <input
-                    type="text"
-                    id="search-input"
-                    placeholder="名前で検索..."
-                    onkeyup="filterUsers()"
-                    style="width: 300px; padding: 10px; margin-bottom: 20px; border: 1px solid #ddd; border-radius: 4px;"
-            >
+            <input type="text" id="search-input" placeholder="ユーザー名で検索"
+                   style="width: 250px; padding: 10px; margin-bottom: 20px; border: 1px solid #ddd; border-radius: 4px; margin-right: 10px;"/>
+            <button onclick="filterUsers()"style="padding: 10px; border: 1px solid #ddd; border-radius: 4px; cursor: pointer;">検索</button> <!-- 搜索按钮 -->
         </div>
         <button id="add-user-btn" class="action-btn" onclick="showUserForm()">新規ユーザー</button>
         <div class="table-container">
@@ -352,6 +348,22 @@
     function closeModal() {
         const modal = document.getElementById('userModal');
         modal.parentNode.removeChild(modal);
+    }
+    function filterUsers() {
+        const searchInput = document.getElementById('search-input');
+        const filter = searchInput.value.toLowerCase();
+        const rows = document.querySelectorAll('#user-table tbody tr'); // 获取所有表格行
+
+        rows.forEach(row => {
+            const nameCell = row.cells[1]; // 获取名字这一列
+            const userName = nameCell.textContent || nameCell.innerText;
+
+            if (userName.toLowerCase().indexOf(filter) > -1) {
+                row.style.display = "";
+            } else {
+                row.style.display = "none";
+            }
+        });
     }
 </script>
 <body onload="loadUsers()">
