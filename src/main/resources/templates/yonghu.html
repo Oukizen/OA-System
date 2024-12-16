@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>REIオフィス自動化システム</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #1F2937;
+            display: flex;
+        }
+
+        .sidebar {
+            width: 250px;
+            background-color: #1f2937;
+            height: 100vh;
+            color: white;
+            padding-top: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .sidebar a {
+            width: 100%;
+            padding: 15px;
+            text-align: center;
+            text-decoration: none;
+            color: white;
+            font-size: 16px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        .sidebar a:hover {
+            background-color: #ffffff;
+            color: #1f2937;
+        }
+
+        .main-content {
+            flex-grow: 1;
+            padding: 20px;
+            background-color: #fff;
+            min-height: 100vh;
+        }
+
+        header {
+            background-color: #1f2937;
+            color: white;
+            padding: 10px 20px;
+            text-align: center;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .table-container {
+            margin: 20px 0;
+            overflow-x: auto;
+        }
+
+        #user-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        #user-table th,
+        #user-table td {
+            padding: 12px;
+            text-align: left;
+            border: 1px solid #ddd;
+        }
+
+        #user-table th {
+            background-color: #1f2937;
+            color: white;
+        }
+
+        #user-table tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        #user-table tr:hover {
+            background-color: #ddd;
+        }
+
+        .action-btn {
+            padding: 8px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+
+        #add-user-btn {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        .edit-btn {
+            background-color: #2196F3;
+            color: white;
+        }
+
+        .delete-btn {
+            background-color: #f44336;
+            color: white;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgb(31, 41, 55);
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 500px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        footer {
+            text-align: center;
+            padding: 10px;
+            background-color: #1f2937;
+            color: white;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+
+<!-- 左侧任务栏 -->
+<div class="sidebar">
+    <a href="#" class="active">ユーザー管理</a>
+    <a href="#approval-management">承認管理</a>
+    <a href="#document-management">文書管理</a>
+    <a href="#schedule-management">日程管理</a>
+    <a href="#system-settings">システム設定</a>
+    <a href="#announcement-settings">お知らせ設定</a>
+</div>
+
+<!-- 主内容区域 -->
+<div class="main-content">
+    <header>
+        <h1>REIオフィス自動化システム</h1>
+        <div class="user-welcome">
+            <span>ようこそ！</span>
+        </div>
+    </header>
+
+    <!-- 用户管理内容 -->
+    <div id="user-management-content">
+        <h2>ユーザー管理</h2>
+        <div>
+            <input
+                    type="text"
+                    id="search-input"
+                    placeholder="名前で検索..."
+                    onkeyup="filterUsers()"
+                    style="width: 300px; padding: 10px; margin-bottom: 20px; border: 1px solid #ddd; border-radius: 4px;"
+            >
+        </div>
+        <button id="add-user-btn" class="action-btn" onclick="showUserForm()">新規ユーザー</button>
+        <div class="table-container">
+            <table id="user-table">
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>名前</th>
+                    <th>メール</th>
+                    <th>電話番号</th>
+                    <th>住所</th>
+                    <th>性別</th>
+                    <th>職位</th>
+                    <th>年齢</th>
+                    <th>操作</th>
+                </tr>
+                </thead>
+                <tbody>
+                <!-- 用户数据将通过 JavaScript 动态加载 -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <footer>
+        <p>© 2024 REIオフィス自動化システム</p>
+    </footer>
+</div>
+
+<script>
+    // 页面加载完成后立即加载用户数据
+    document.addEventListener('DOMContentLoaded', function() {
+        loadUsers();
+    });
+
+    function loadUsers() {
+        fetch('/yonghu/list')
+            .then(response => response.json())
+            .then(users => {
+                const tbody = document.querySelector('#user-table tbody');
+                tbody.innerHTML = '';
+                users.forEach(user => {
+                    tbody.innerHTML += `
+                    <tr>
+                        <td>${user.id}</td>
+                        <td>${user.name}</td>
+                        <td>${user.email}</td>
+                        <td>${user.phone || ''}</td>
+                        <td>${user.address || ''}</td>
+                        <td>${user.sex || ''}</td>
+                        <td>${user.syokui === 1 ? '社長' : user.syokui === 2 ? 'マネジャー' :user.syokui === 3 ? '社員' : user.syokui || ''}</td>
+                        <!-- 1是社长 2是社员 -->
+                        <td>${user.age || ''}</td>
+                        <td>
+                            <button onclick="editUser(${user.id})" class="action-btn edit-btn">編集</button>
+                            <button onclick="deleteUser(${user.id})" class="action-btn delete-btn">削除</button>
+                        </td>
+                    </tr>
+                `;
+                });
+            })
+            .catch(error => {
+                console.error('Error loading user data:', error);
+            });
+    }
+
+    function showUserForm(user = null) {
+        const modalHtml = `
+    <div id="userModal" class="modal">
+      <div class="modal-content">
+        <h2>${user ? 'ユーザー編集' : '新規ユーザー'}</h2>
+        <form id="userForm">
+          <input type="hidden" name="id" value="${user ? user.id : ''}">
+          <div class="form-group">
+            <label>名前</label>
+            <input type="text" name="name" value="${user ? user.name : ''}" required>
+          </div>
+          <div class="form-group">
+            <label>パスワード</label>
+            <input type="password" name="password" ${user ? '' : 'required'}>
+          </div>
+          <div class="form-group">
+            <label>メール</label>
+            <input type="email" name="email" value="${user ? user.email : ''}" required>
+          </div>
+          <div class="form-group">
+            <label>電話番号</label>
+            <input type="text" name="phone" value="${user ? user.phone : ''}">
+          </div>
+          <div class="form-group">
+            <label>住所</label>
+            <input type="text" name="address" value="${user ? user.address : ''}">
+          </div>
+          <div class="form-group">
+            <label>性別</label>
+            <select name="sex">
+              <option value="男" ${user && user.sex === '男' ? 'selected' : ''}>男</option>
+              <option value="女" ${user && user.sex === '女' ? 'selected' : ''}>女</option>
+            </select>
+          </div>
+          <div class="form-group">
+             <label>職位</label>
+             <select name="syokui">
+               <option value="1" ${user && user.syokui === '1' ? 'selected' : ''}>社長</option>
+             <option value="2" ${user && user.syokui === '2' ? 'selected' : ''}>マネジャー</option>
+             <option value="2" ${user && user.syokui === '3' ? 'selected' : ''}>社員</option>
+            </select>
+            </div>
+          <div class="form-group">
+            <label>年齢</label>
+            <input type="number" name="age" value="${user ? user.age : ''}" required>
+          </div>
+          <button type="submit" class="action-btn">保存</button>
+          <button type="button" class="action-btn" onclick="closeModal()">キャンセル</button>
+        </form>
+      </div>
+    </div>
+  `;
+
+        document.body.insertAdjacentHTML('beforeend', modalHtml);
+        document.getElementById('userModal').style.display = 'block';
+
+        document.getElementById('userForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const formData = new FormData(this);
+            const userData = Object.fromEntries(formData.entries());
+
+            // 使用 POST 请求将数据发送到后端
+            fetch('/yonghu/save', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(userData)
+            })
+                .then(() => {
+                    closeModal();
+                    loadUsers();
+                });
+        });
+    }
+
+
+    function editUser(id) {
+        fetch(`/yonghu/get/${id}`)
+            .then(response => response.json())
+            .then(user => {
+                showUserForm(user);
+            });
+    }
+
+    function deleteUser(id) {
+        if (confirm('本当に削除しますか？')) {
+            fetch(`/yonghu/delete/${id}`, { method: 'DELETE' })
+                .then(() => loadUsers());
+        }
+    }
+
+    function closeModal() {
+        const modal = document.getElementById('userModal');
+        modal.parentNode.removeChild(modal);
+    }
+</script>
+<body onload="loadUsers()">
+<!-- 页面内容 -->
+</body>
+<script src="/static/js/script.js"></script>
+</body>
+</html>
