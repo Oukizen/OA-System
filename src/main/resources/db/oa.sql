@@ -41,5 +41,6 @@ CREATE TABLE `user`  (
 INSERT INTO `user` VALUES (10000001, '一郎', 'admin', '784512545@gmail.com', '080952644554', '女', 1, 24, '日本', NULL);
 INSERT INTO `user` VALUES (10000002, '二郎', 'admin', '784512545@gmail.com', '13888888888', '女', 1, 18, '日本東京文京区千駄木', NULL);
 INSERT INTO `user` VALUES (10000003, '三朗', 'admin', '784512545@gmail.com', '080952644554', '女', 1, 22, '東京都千駄木4-7-10', NULL);
+INSERT INTO `user` VALUES (10000004, '四朗', 'admin', '784512545@gmail.com', '080952644554', '女', 1, 22, '東京都千駄木4-7-10', NULL);
 
 SET FOREIGN_KEY_CHECKS = 1;
