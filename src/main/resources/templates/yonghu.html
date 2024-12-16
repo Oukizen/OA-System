@@ -187,8 +187,12 @@
             <input type="text" id="search-input" placeholder="ユーザー名で検索"
                    style="width: 250px; padding: 10px; margin-bottom: 20px; border: 1px solid #ddd; border-radius: 4px; margin-right: 10px;"/>
             <button onclick="filterUsers()"style="padding: 10px; border: 1px solid #ddd; border-radius: 4px; cursor: pointer;">検索</button>
+            <input type="text" id="search-input-id" placeholder="IDで検索"
+                   style="width: 250px; padding: 10px; margin-bottom: 20px; border: 1px solid #ddd; border-radius: 4px; margin-right: 10px;"/>
+            <button onclick="filterUsersnum()" style="padding: 10px; border: 1px solid #ddd; border-radius: 4px; cursor: pointer;">検索</button>
+            <button onclick="resetFilters()" style="padding: 10px; border: 1px solid #ddd; border-radius: 4px; cursor: pointer;">重置</button>
+            <button id="add-user-btn" class="action-btn" onclick="showUserForm()">新規ユーザー</button>
         </div>
-        <button id="add-user-btn" class="action-btn" onclick="showUserForm()">新規ユーザー</button>
         <div class="table-container">
             <table id="user-table">
                 <thead>
@@ -365,6 +369,24 @@
             }
         });
     }
+    function filterUsersnum() {
+        const searchInput = document.getElementById('search-input-id');  // 使用新的 ID
+        const filter = searchInput.value.toLowerCase();
+        const rows = document.querySelectorAll('#user-table tbody tr');
+
+        rows.forEach(row => {
+            const idCell = row.cells[0];  // 获取ID这一列
+            const userId = idCell.textContent || idCell.innerText;
+
+            if (userId.toLowerCase().indexOf(filter) > -1) {
+                row.style.display = "";
+            } else {
+                row.style.display = "none";
+            }
+        });
+    }
+
+
 </script>
 <body onload="loadUsers()">
 <!-- 页面内容 -->
