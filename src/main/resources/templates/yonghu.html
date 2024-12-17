@@ -242,7 +242,7 @@
                         <td>${user.address || ''}</td>
                         <td>${user.sex || ''}</td>
                         <td>${user.syokui === 1 ? '社長' : user.syokui === 2 ? 'マネジャー' :user.syokui === 3 ? '社員' : user.syokui || ''}</td>
-                        <!-- 1是社长 2是社员 -->
+                        <!-- 1是社长 3是社员 -->
                         <td>${user.age || ''}</td>
                         <td>
                             <button onclick="editUser(${user.id})" class="action-btn edit-btn">編集</button>
