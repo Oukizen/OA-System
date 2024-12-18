@@ -233,23 +233,24 @@
                 const tbody = document.querySelector('#user-table tbody');
                 tbody.innerHTML = '';
                 users.forEach(user => {
+                    // 在loadUsers函数中的表格行生成部分
                     tbody.innerHTML += `
-                    <tr>
-                        <td>${user.id}</td>
-                        <td>${user.name}</td>
-                        <td>${user.email}</td>
-                        <td>${user.phone || ''}</td>
-                        <td>${user.address || ''}</td>
-                        <td>${user.sex || ''}</td>
-                        <td>${user.syokui === 1 ? '社長' : user.syokui === 2 ? 'マネジャー' :user.syokui === 3 ? '社員' : user.syokui || ''}</td>
-                        <!-- 1是社长 3是社员 -->
-                        <td>${user.age || ''}</td>
-                        <td>
-                            <button onclick="editUser(${user.id})" class="action-btn edit-btn">編集</button>
-                            <button onclick="deleteUser(${user.id})" class="action-btn delete-btn">削除</button>
-                        </td>
-                    </tr>
-                `;
+          <tr>
+        <td>${user.id}</td>
+        <td>${user.name}</td>
+        <td>${user.email}</td>
+        <td>${user.phone || ''}</td>
+        <td>${user.address || ''}</td>
+        <td>${user.sex || ''}</td>
+        <td>${user.syokui === 1 ? '社長' : user.syokui === 2 ? 'マネジャー' :user.syokui === 3 ? '社員' : user.syokui || ''}</td>
+        <td>${user.age || ''}</td>
+        <td>
+            <button onclick="editUser(${user.id})" class="action-btn edit-btn">編集</button>
+            <button onclick="deleteUser(${user.id})" class="action-btn delete-btn">削除</button>
+            <button onclick="window.location.href='yonghuxq?id=${user.id}'" class="action-btn details-btn">詳細</button>
+        </td>
+    </tr>
+`;
                 });
             })
             .catch(error => {
@@ -303,6 +304,7 @@
             <label>年齢</label>
             <input type="number" name="age" value="${user ? user.age : ''}" required>
           </div>
+
           <button type="submit" class="action-btn">保存</button>
           <button type="button" class="action-btn" onclick="closeModal()">キャンセル</button>
         </form>

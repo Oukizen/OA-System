@@ -19,6 +19,27 @@ public class User {
     private Integer age;
     private String address;
     private String positionName;
+    @Lob
+    @Column(name = "photo", columnDefinition = "LONGBLOB", nullable = true)
+    private byte[] photo; // 用于存储员工照片
+
+    public byte[] getPhoto() {
+        return photo;
+    }
+
+    public void setPhoto(byte[] photo) {
+        this.photo = photo;
+    }
+
+    public String getPositionName() {
+        return positionName;
+    }
+
+    public void setPositionName(String positionName) {
+        this.positionName = positionName;
+    }
+
+
     // 必须提供 Getter 和 Setter 方法
     public Long getId() {
         return id;

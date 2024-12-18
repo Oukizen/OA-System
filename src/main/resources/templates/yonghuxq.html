@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>REIオフィス自動化システム - 社員詳細</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #1F2937;
+            display: flex;
+        }
+
+        .sidebar {
+            width: 250px;
+            background-color: #1f2937;
+            height: 100vh;
+            color: white;
+            padding-top: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .sidebar a {
+            width: 100%;
+            padding: 15px;
+            text-align: center;
+            text-decoration: none;
+            color: white;
+            font-size: 16px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        .sidebar a:hover {
+            background-color: #ffffff;
+            color: #1f2937;
+        }
+
+        .main-content {
+            flex-grow: 1;
+            padding: 20px;
+            background-color: #fff;
+            min-height: 100vh;
+        }
+
+        header {
+            background-color: #1f2937;
+            color: white;
+            padding: 10px 20px;
+            text-align: center;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .employee-details {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            border-radius: 8px;
+        }
+
+        .profile-section {
+            display: flex;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .photo-section {
+            width: 200px;
+        }
+
+        .photo-container {
+            width: 200px;
+            height: 200px;
+            border: 2px dashed #ddd;
+            border-radius: 4px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 10px;
+            overflow: hidden;
+        }
+
+        .photo-container img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: cover;
+        }
+
+        .upload-btn {
+            width: 100%;
+            padding: 8px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .info-section {
+            flex-grow: 1;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+
+        .info-item {
+            margin-bottom: 15px;
+        }
+
+        .info-item label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #666;
+        }
+
+        .info-item span {
+            font-size: 16px;
+            color: #333;
+        }
+
+        .action-btn {
+            padding: 8px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+
+        .back-btn {
+            background-color: #1f2937;
+            color: white;
+            margin-bottom: 20px;
+        }
+
+        footer {
+            text-align: center;
+            padding: 10px;
+            background-color: #1f2937;
+            color: white;
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+
+<!-- 左侧任务栏 -->
+<div class="sidebar">
+    <a href="#" class="active">ユーザー管理</a>
+    <a href="#approval-management">承認管理</a>
+    <a href="#document-management">文書管理</a>
+    <a href="#schedule-management">日程管理</a>
+    <a href="#system-settings">システム設定</a>
+    <a href="#announcement-settings">お知らせ設定</a>
+</div>
+
+<!-- 主内容区域 -->
+<div class="main-content">
+    <header>
+        <h1>REIオフィス自動化システム</h1>
+        <div class="user-welcome">
+            <span>ようこそ！</span>
+        </div>
+    </header>
+
+    <button onclick="window.history.back()" class="action-btn back-btn">戻る</button>
+
+    <div class="employee-details">
+        <h2>社員詳細情報</h2>
+
+        <div class="profile-section">
+            <div class="photo-section">
+                <div class="photo-container">
+                    <img id="employee-photo" src="/api/placeholder/200/200" alt="社員写真">
+                </div>
+                <input type="file" id="photo-upload" accept="image/*" style="display: none">
+                <button onclick="document.getElementById('photo-upload').click()" class="upload-btn">写真をアップロード</button>
+            </div>
+
+            <div class="info-section">
+                <div class="info-grid">
+                    <div class="info-item">
+                        <label>ID</label>
+                        <span id="employee-id"></span>
+                    </div>
+                    <div class="info-item">
+                        <label>名前</label>
+                        <span id="employee-name"></span>
+                    </div>
+                    <div class="info-item">
+                        <label>メール</label>
+                        <span id="employee-email"></span>
+                    </div>
+                    <div class="info-item">
+                        <label>電話番号</label>
+                        <span id="employee-phone"></span>
+                    </div>
+                    <div class="info-item">
+                        <label>住所</label>
+                        <span id="employee-address"></span>
+                    </div>
+                    <div class="info-item">
+                        <label>性別</label>
+                        <span id="employee-sex"></span>
+                    </div>
+                    <div class="info-item">
+                        <label>職位</label>
+                        <span id="employee-syokui"></span>
+                    </div>
+                    <div class="info-item">
+                        <label>年齢</label>
+                        <span id="employee-age"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <p>© 2024 REIオフィス自動化システム</p>
+    </footer>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Get employee ID from URL parameter
+        const urlParams = new URLSearchParams(window.location.search);
+        const employeeId = urlParams.get('id');
+
+        if (employeeId) {
+            loadEmployeeDetails(employeeId);
+        } else {
+            // Add error handling for missing ID
+            alert('社員IDが見つかりません。');
+            window.location.href = 'index.html'; // Redirect to main page
+        }
+    });
+
+    function loadEmployeeDetails(id) {
+        // Show loading state
+        const elements = ['id', 'name', 'email', 'phone', 'address', 'sex', 'syokui', 'age'];
+        elements.forEach(el => {
+            document.getElementById(`employee-${el}`).textContent = '読み込み中...';
+        });
+
+        fetch(`/yonghu/get/${id}`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(employee => {
+                document.getElementById('employee-id').textContent = employee.id;
+                document.getElementById('employee-name').textContent = employee.name;
+                document.getElementById('employee-email').textContent = employee.email;
+                document.getElementById('employee-phone').textContent = employee.phone || '未設定';
+                document.getElementById('employee-address').textContent = employee.address || '未設定';
+                document.getElementById('employee-sex').textContent = employee.sex || '未設定';
+                document.getElementById('employee-syokui').textContent = getSyokuiText(employee.syokui);
+                document.getElementById('employee-age').textContent = employee.age || '未設定';
+
+                // If employee has a photo, load it
+                if (employee.photoUrl) {
+                    document.getElementById('employee-photo').src = employee.photoUrl;
+                } else {
+                    document.getElementById('employee-photo').src = '/api/placeholder/200/200';
+                }
+
+                // Update page title with employee name
+                document.title = `${employee.name}の詳細情報 - REIオフィス自動化システム`;
+            })
+            .catch(error => {
+                console.error('Error loading employee details:', error);
+                alert('社員情報の読み込みに失敗しました。');
+                // Show error state
+                elements.forEach(el => {
+                    document.getElementById(`employee-${el}`).textContent = 'エラーが発生しました';
+                });
+            });
+    }
+
+    function getSyokuiText(syokui) {
+        switch(Number(syokui)) { // Convert to number to ensure correct comparison
+            case 1: return '社長';
+            case 2: return 'マネジャー';
+            case 3: return '社員';
+            default: return '未設定';
+        }
+    }
+
+    // Handle photo upload with better error handling and validation
+    document.getElementById('photo-upload').addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        // Validate file type
+        if (!file.type.startsWith('image/')) {
+            alert('画像ファイルのみアップロード可能です。');
+            return;
+        }
+
+        // Validate file size (e.g., max 5MB)
+        if (file.size > 5 * 1024 * 1024) {
+            alert('ファイルサイズは5MB以下にしてください。');
+            return;
+        }
+
+        // Show upload status
+        const photoElement = document.getElementById('employee-photo');
+        const originalSrc = photoElement.src;
+        photoElement.src = '/api/placeholder/200/200'; // Loading placeholder
+
+        const formData = new FormData();
+        formData.append('photo', file);
+        formData.append('employeeId', document.getElementById('employee-id').textContent);
+
+        fetch('/yonghu/upload-photo', {
+            method: 'POST',
+            body: formData
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.photoUrl) {
+                    photoElement.src = data.photoUrl;
+                    alert('写真のアップロードが完了しました。');
+                } else {
+                    throw new Error('Photo URL not received');
+                }
+            })
+            .catch(error => {
+                console.error('Error uploading photo:', error);
+                alert('写真のアップロードに失敗しました。');
+                photoElement.src = originalSrc; // Restore original photo
+            });
+    });
+
+    // Add refresh button functionality
+    function refreshDetails() {
+        const employeeId = new URLSearchParams(window.location.search).get('id');
+        if (employeeId) {
+            loadEmployeeDetails(employeeId);
+        }
+    }
+</script>
+
+</body>
+</html>
