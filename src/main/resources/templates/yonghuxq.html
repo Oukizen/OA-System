@@ -274,9 +274,9 @@
                 document.getElementById('employee-syokui').textContent = getSyokuiText(employee.syokui);
                 document.getElementById('employee-age').textContent = employee.age || '未設定';
 
-                // If employee has a photo, load it
-                if (employee.photoUrl) {
-                    document.getElementById('employee-photo').src = employee.photoUrl;
+                // 修改照片加载的部分
+                if (employee.photo) {
+                    document.getElementById('employee-photo').src = `/yonghu/photo/${employee.id}`;
                 } else {
                     document.getElementById('employee-photo').src = '/api/placeholder/200/200';
                 }
@@ -304,23 +304,29 @@
     }
 
     // Handle photo upload with better error handling and validation
+    // Handle photo upload with better error handling and validation
     document.getElementById('photo-upload').addEventListener('change', function(e) {
         const file = e.target.files[0];
         if (!file) return;
 
-        // Validate file type
-        if (!file.type.startsWith('image/')) {
-            alert('画像ファイルのみアップロード可能です。');
+        // 允许的图片格式
+        const allowedFormats = ['image/jpeg', 'image/png', 'image/jpg'];
+
+        // 验证文件格式
+        if (!allowedFormats.includes(file.type)) {
+            alert('只允许上传 JPG, JPEG, PNG 格式的图片');
+            this.value = '';
             return;
         }
 
-        // Validate file size (e.g., max 5MB)
-        if (file.size > 5 * 1024 * 1024) {
-            alert('ファイルサイズは5MB以下にしてください。');
+        // 验证文件大小 (2MB)
+        if (file.size > 2 * 1024 * 1024) {
+            alert('文件大小不能超过2MB');
+            this.value = '';
             return;
         }
 
-        // Show upload status
+        // 显示上传状态
         const photoElement = document.getElementById('employee-photo');
         const originalSrc = photoElement.src;
         photoElement.src = '/api/placeholder/200/200'; // Loading placeholder
@@ -333,24 +339,16 @@
             method: 'POST',
             body: formData
         })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                return response.json();
-            })
+            .then(response => response.json())
             .then(data => {
-                if (data.photoUrl) {
-                    photoElement.src = data.photoUrl;
-                    alert('写真のアップロードが完了しました。');
-                } else {
-                    throw new Error('Photo URL not received');
-                }
+                // 直接使用员工ID构建照片URL
+                const employeeId = document.getElementById('employee-id').textContent;
+                document.getElementById('employee-photo').src = `/yonghu/photo/${employeeId}`;
+                alert('照片上传成功！');
             })
             .catch(error => {
-                console.error('Error uploading photo:', error);
-                alert('写真のアップロードに失敗しました。');
-                photoElement.src = originalSrc; // Restore original photo
+                console.error('上传失败:', error);
+                alert('照片上传失败');
             });
     });
 
