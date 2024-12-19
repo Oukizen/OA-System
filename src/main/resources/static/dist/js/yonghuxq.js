@@ -68,57 +68,56 @@ function handlePhotoDisplay(photo, employeeId) {
 }
 
 // 处理图片上传，增加更好的错误处理和验证
-$('#photo-upload').on('change', function(e) {
-	const file = e.target.files[0];
-	if (!file) return;
+$(document).ready(function() {
+	$('#photo-upload').on('change', function(e) {
+		const file = e.target.files[0];
+		if (!file) return;
 
-	// 验证文件类型
-	const allowedFormats = ['image/jpeg', 'image/png', 'image/jpg'];
-	if (!allowedFormats.includes(file.type)) {
-		alert('アップロードできるのはJPG、JPEG、PNG画像のみです');
-		$(this).val(''); // 清空文件选择框
-		return;
-	}
-
-	// 验证文件大小（最大2MB）
-	if (file.size > 2 * 1024 * 1024) {
-		alert('ファイルサイズは2MBを超えることはできません');
-		$(this).val(''); // 清空文件选择框
-		return;
-	}
-
-	// 显示上传状态
-	const photoElement = $('#employee-photo');
-	const originalSrc = photoElement.attr('src');
-	photoElement.attr('src', '/api/placeholder/200/200'); // 显示加载占位图
-
-	// 创建 FormData 发送文件
-	const formData = new FormData();
-	formData.append('photo', file);
-	formData.append('employeeId', $('#employee-id').text());
-
-	// 使用 fetch 上传文件
-	$.ajax({
-		url: '/yonghu/upload-photo',
-		type: 'POST',
-		data: formData,
-		processData: false,
-		contentType: false,
-		success: function(data) {
-			// 上传成功，更新图片
-			const employeeId = $('#employee-id').text();
-			$('#employee-photo').attr('src', `/yonghu/photo/${employeeId}`);
-			alert('写真はアップロードされました！');
-		},
-		error: function(error) {
-			// 上传失败，恢复原始图片
-			console.error('失败:', error);
-			alert('写真のアップロードが失敗しました！');
-			photoElement.attr('src', originalSrc); // 恢复原始图片
+		// 验证文件类型
+		const allowedFormats = ['image/jpeg', 'image/png', 'image/jpg'];
+		if (!allowedFormats.includes(file.type)) {
+			alert('アップロードできるのはJPG、JPEG、PNG画像のみです');
+			$(this).val('');
+			return;
 		}
+
+		// 验证文件大小
+		if (file.size > 2 * 1024 * 1024) {
+			alert('ファイルサイズは2MBを超えることはできません');
+			$(this).val('');
+			return;
+		}
+
+		// 显示上传状态
+		const photoElement = $('#employee-photo');
+		const originalSrc = photoElement.attr('src');
+		photoElement.attr('src', '/api/placeholder/200/200');
+
+		// 创建 FormData
+		const formData = new FormData();
+		formData.append('photo', file);
+		formData.append('employeeId', $('#employee-id').text());
+
+		// 上传文件
+		$.ajax({
+			url: '/yonghu/upload-photo',
+			type: 'POST',
+			data: formData,
+			processData: false,
+			contentType: false,
+			success: function(data) {
+				const employeeId = $('#employee-id').text();
+				$('#employee-photo').attr('src', `/yonghu/photo/${employeeId}`);
+				alert('写真はアップロードされました！');
+			},
+			error: function(error) {
+				console.error('失败:', error);
+				alert('写真のアップロードが失敗しました！');
+				photoElement.attr('src', originalSrc);
+			}
+		});
 	});
 });
-
 // 刷新员工详情页面
 function refreshDetails() {
 	const employeeId = new URLSearchParams(window.location.search).get('id');
