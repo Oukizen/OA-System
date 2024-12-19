@@ -314,14 +314,14 @@
 
         // 验证文件格式
         if (!allowedFormats.includes(file.type)) {
-            alert('只允许上传 JPG, JPEG, PNG 格式的图片');
+            alert('アップロードできるのはJPG、JPEG、PNG画像のみです');
             this.value = '';
             return;
         }
 
         // 验证文件大小 (2MB)
         if (file.size > 2 * 1024 * 1024) {
-            alert('文件大小不能超过2MB');
+            alert('ファイルサイズは2MBを超えることはできません');
             this.value = '';
             return;
         }
@@ -344,11 +344,11 @@
                 // 直接使用员工ID构建照片URL
                 const employeeId = document.getElementById('employee-id').textContent;
                 document.getElementById('employee-photo').src = `/yonghu/photo/${employeeId}`;
-                alert('照片上传成功！');
+                alert('写真はアップロードされました！');
             })
             .catch(error => {
-                console.error('上传失败:', error);
-                alert('照片上传失败');
+                console.error('失败:', error);
+                alert('写真のアップロードが失敗しました！');
             });
     });
 
