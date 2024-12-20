@@ -36,7 +36,7 @@ body {
 
 .main-content {
 	flex-grow: 1;
-	padding: 20px;
+	padding: 10px;
 	background-color: #fff;
 	min-height: 100vh;
 }
@@ -146,4 +146,9 @@ footer {
 	position: fixed;
 	bottom: 0;
 	width: 100%;
+}
+h1 {
+	font-size: 32px;  /* 设置标题的字体大小 */
+	color: white;
+	font-weight: bold;
 }
