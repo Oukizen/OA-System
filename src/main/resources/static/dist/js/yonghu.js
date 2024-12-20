@@ -1,4 +1,3 @@
-// 页面加载完成后立即加载用户数据
 document.addEventListener('DOMContentLoaded', function() {
     loadUsers();
 });
@@ -164,4 +163,10 @@ function filterUsersnum() {
         }
     });
 }
+function resetSearch() {
+    const searchInput = document.getElementById('search-input-id');
+    searchInput.value = "";
+    filterUsersnum();
+}
+
 
