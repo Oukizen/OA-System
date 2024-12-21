@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -12,150 +13,135 @@ import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.example.demo.entity.UploadFile;
+import com.example.demo.mapper.UploadFileMapper;
 import com.example.demo.service.UploadedFileService;
 import com.example.demo.utill.Pager;
 
-@RestController
-@RequestMapping("/file")
+@Controller
 public class UploadFileController {
 
-	private String FILE_DIRECTORY = "D:/Users/hqq/oa/OA-System/src/main/resources";
+	private String FILE_DIRECTORY = "D:/Users/hqq/oa/OA-System/src/main/resources/uploads";
 
 	@Autowired
 	private UploadedFileService fileService;
+	@Autowired
+	private UploadFileMapper uploadFileMapper;
 
-	// 显示文件管理页面
-	@GetMapping("/page")
-	public String showFilePage() {
-		return "file"; // `file.html` 需要在 `resources/templates` 文件夹中
-	}
-
-	// ファイルのアップロード
-	@PostMapping
-	public ResponseEntity<UploadFile> uploadFile(@RequestParam("file") MultipartFile file) {
+	@PostMapping("/file")
+	@ResponseBody
+	public ResponseEntity<String> uploadFile(@RequestParam("file") MultipartFile file) {
 		try {
 			UploadFile uploadedFile = fileService.storeFile(file);
-
 			uploadedFile.setIsPublic(1);
-			return ResponseEntity.ok(uploadedFile);
+			return ResponseEntity.ok("ファイルのアップロードが成功しました！");
 		} catch (Exception e) {
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("ファイルのアップロードに失敗しました");
 		}
 	}
 
-	// ファイルの取得（ページング）
-	@GetMapping
-	public ResponseEntity<Pager<UploadFile>> getFiles(@RequestParam(required = false) String name,
+	// ファイルの取得（ページング） - 返回 HTML 页面
+	@GetMapping("/file")
+	public String getFiles(Model model, @RequestParam(required = false) String name,
 			@RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "5") int size) {
-		try {
-			if (page < 1 || size < 1) {
-				return ResponseEntity.badRequest().body(null);
-			}
-			Pager<UploadFile> pager = fileService.getFilesByPage(page, size, name);
+		Pager<UploadFile> pager = fileService.getFilesByPage(page, size, name);
+		model.addAttribute("pager", pager);
+		return "file";
 
-			return ResponseEntity.ok(pager);
-		} catch (Exception e) {
-			e.printStackTrace();
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-		}
 	}
 
-	// 単一ファイルの削除
-	@DeleteMapping("/{fileId}")
-	public ResponseEntity<Void> deleteFile(@PathVariable Long fileId) {
+	// ファイルの取得（ページング） - 返回 JSON 数据
+	@GetMapping("/file/list")
+	@ResponseBody
+	public ResponseEntity<?> getFileList(@RequestParam(required = false) String name,
+			@RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "5") int size) {
+		Pager<UploadFile> pager = fileService.getFilesByPage(page, size, name);
+		return ResponseEntity.ok(pager);
+
+	}
+
+	// 单一ファイルの削除
+
+	@DeleteMapping("/file/{fileId}")
+	@ResponseBody
+	public String deleteFile(@PathVariable Long fileId) {
 		boolean deleted = fileService.deleteFile(fileId);
 		if (deleted) {
-			return ResponseEntity.noContent().build();
+			return "redirect:/file";
 		} else {
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+			return "error";
 		}
 	}
 
 	// バッチファイル削除
-	@PostMapping("/batch-delete")
-	public ResponseEntity<Void> batchDelete(@RequestBody Map<String, List<Long>> fileIds) {
-
+	@PostMapping("/file/batch-delete")
+	@ResponseBody
+	public String batchDelete(@RequestBody Map<String, List<Long>> fileIds) {
 		List<Long> ids = fileIds.get("fileIds");
+		boolean success = false; // 初始化 success
 
-		if (ids == null || ids.isEmpty()) {
-			return ResponseEntity.badRequest().build();
+		try {
+			success = fileService.batchDeleteFiles(ids);
+		} catch (IOException e) {
+			e.printStackTrace();
+			return "error"; // 如果发生异常，直接返回错误信息
 		}
 
-		boolean success = fileService.batchDeleteFiles(ids);
-
-		if (success) {
-			return ResponseEntity.ok().build();
-		} else {
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
-		}
+		return success ? "redirect:/file" : "error"; // 根据 success 的值返回结果
 	}
 
 	// ファイルの公開/非公開ステータスの切り替え
-	@PutMapping("/{fileId}/toggle-status")
-	public ResponseEntity<UploadFile> toggleFileStatus(@PathVariable Long fileId) {
-		try {
-			UploadFile file = fileService.getFileById(fileId);
+	@PutMapping("/file/{fileId}/toggle-status")
+	@ResponseBody
+	public String toggleFileStatus(@PathVariable Long fileId) {
 
-			if (file == null) {
-				return ResponseEntity.notFound().build();
-			}
+		UploadFile file = fileService.getFileById(fileId);
+		file.setIsPublic(file.getIsPublic() == 1 ? 0 : 1);
+		fileService.updateFile(file);
+		return "redirect:/file";
 
-			// 公開状態を切り替え
-			if (file.getIsPublic() == 1) {
-				file.setIsPublic(0);
-			} else {
-				file.setIsPublic(1);
-			}
-
-			UploadFile updatedFile = fileService.updateFile(file);
-
-			return ResponseEntity.ok(updatedFile);
-		} catch (Exception e) {
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build(); // 500エラーを返す
-		}
 	}
 
-	// ファイルのダウンロード
-	@GetMapping("/download/{fileId}")
+	@GetMapping("/file/download/{fileId}")
+	@ResponseBody
 	public ResponseEntity<Resource> downloadFile(@PathVariable Long fileId) {
 		try {
-			// ファイル名とURLを取得
 			String originalFileName = fileService.getFileNameById(fileId);
-			String uuidFileName = fileService.getFileUrlById(fileId);
+			UploadFile uploadedFile = uploadFileMapper.getFileById(fileId);
 
-			Path filePath = Paths.get(FILE_DIRECTORY, uuidFileName);
-			filePath = filePath.normalize();
+			Path filePath = Paths.get(uploadedFile.getUrl());
 
+			System.out.println("File Path: " + filePath);
 			Resource resource = new UrlResource(filePath.toUri());
 
-			// ファイルが存在し、読み取り可能かチェック
 			if (resource.exists() && resource.isReadable()) {
 				String contentType = Files.probeContentType(filePath);
 				if (contentType == null) {
-					contentType = "application/octet-stream";
+					contentType = "application/octet-stream"; // 如果无法确定 MIME 类型，返回二进制流
 				}
 
-				// ファイルをダウンロードするためにレスポンスを返す
 				return ResponseEntity.ok()
 						.header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + originalFileName + "\"")
 						.header(HttpHeaders.CONTENT_TYPE, contentType).body(resource);
 			} else {
-				return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+				return ResponseEntity.status(HttpStatus.NOT_FOUND).build(); // 文件不可读取，返回404
 			}
 		} catch (Exception e) {
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null); // 返回500错误
 		}
 	}
+
 }

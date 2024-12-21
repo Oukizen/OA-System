@@ -45,94 +45,81 @@ $(document).ready(function () {
   $("#queryBtn").click(() => {
     fetchFiles(); 
   });
-
   function fetchFiles() {
     console.log("fetchFiles が呼び出されました、現在のページ：", currentPage);
+
     const fileName = $("#fileNameInput").val(); 
     console.log("ファイル検索パラメーター：", {
-      page: currentPage,
-      size: pageSize,
-      name: fileName
+        page: currentPage,
+        size: pageSize,
+        name: fileName
     });
 
     $.ajax({
-      url: "http://localhost:8080/file", 
-      type: "GET",
-      data: {
-        page: currentPage,
-        size: pageSize,
-        name: fileName,  
-      },
-      success: function (res) {
-        console.log("ファイル検索の応答：", res);
-        if (res && res.data) {
-          uploadedFiles = res.data || [];  
-          total = res.total || 0;  
-          totalPages = Math.ceil(total / pageSize); 
-          renderFileList(uploadedFiles);
-          renderPagination(); 
-        } else {
-          uploadedFiles = [];
-          total = 0;  
-          renderFileList(uploadedFiles);
-        }
-      },
-      error: function (xhr, status, error) {
-        console.error("ファイル検索に失敗しました", status, error);
-        alert("ファイル検索に失敗しました！");
-      },
+        url: "http://localhost:8080/file/list", // 更新URL以匹配返回JSON数据的接口
+        type: "GET",
+        data: {
+            page: currentPage,
+            size: pageSize,
+            name: fileName,  
+        },
+        success: function (res) {
+            console.log("ファイル検索の応答：", res);
+
+            if (res && res.data && Array.isArray(res.data)) { // 检查响应数据
+                uploadedFiles = res.data || [];  // 获取文件列表
+                total = res.total || 0;          // 获取总文件数量
+                totalPages = Math.ceil(total / pageSize); // 计算总页数
+                renderFileList(uploadedFiles);  // 渲染文件列表
+                renderPagination();             // 渲染分页
+            } else {
+                uploadedFiles = [];
+                total = 0;  
+                totalPages = 0;
+                renderFileList(uploadedFiles);  // 渲染空文件列表
+            }
+        },
+        error: function (xhr, status, error) {
+            console.error("ファイル検索に失敗しました", status, error);
+            alert("ファイル検索に失敗しました！");
+        },
     });
   }
-
   function renderFileList(files) {
     console.log("レンダリング中のファイル：", files); 
     const $fileList = $("#fileList tbody");
-    $fileList.empty(); 
+    $fileList.empty();  // 清空文件列表
 
     if (files.length === 0) {
-      $fileList.append("<tr><td colspan='4'>データがありません</td></tr>");
-      return;
+        $fileList.append("<tr><td colspan='4'>データがありません</td></tr>"); // 无数据时显示提示
+        return;
     }
 
-    const startIndex = (currentPage - 1) * pageSize;
-    const endIndex = Math.min(startIndex + pageSize, total);
-    console.log(total);
+    files.forEach(function (file) {
+        const $fileItem = $(`
+            <tr data-file-id="${file.id}">
+                <td><input type="checkbox" class="select-file-checkbox" /></td>
+                <td class="file-name" title="${file.name}">${file.name}</td>
+                <td>
+                    <button class="download-btn">ダウンロード</button>
+                    <button class="delete-btn">削除</button>
+                    <button class="status-btn">${file.isPublic === 1 ? "非公開に設定" : "公開に設定"}</button>
+                </td>
+                <td>${file.isPublic === 1 ? "公開" : "非公開"}</td>
+            </tr>
+        `);
 
-    if (startIndex >= total) {
-      console.log("現在のページはデータ範囲を超えています");
-      return;
-    }
-    console.log(startIndex, endIndex);
+        // 绑定事件处理
+        $fileItem.find(".download-btn").click(() => downloadFile(file.id));
+        $fileItem.find(".delete-btn").click(() => deleteFile(file.id));
+        $fileItem.find(".status-btn").click(() => {
+            toggleFileStatus(file.id, file.isPublic);  
+        });
 
-    console.log(files)
-    const filesToDisplay = files;
-    console.log("レンダリング中のファイル項目：", filesToDisplay);  
-
-    filesToDisplay.forEach(function (file) {
-      const $fileItem = $(`
-        <tr data-file-id="${file.id}">
-          <td><input type="checkbox" class="select-file-checkbox" /></td>
-          <td class="file-name" title="${file.name}">${file.name}</td>
-          <td>
-            <button class="download-btn">ダウンロード</button>
-            <button class="delete-btn">削除</button>
-            <button class="status-btn">${file.isPublic === 1 ? "非公開に設定" : "公開に設定"}</button>
-          </td>
-          <td>${file.isPublic === 1 ? "公開" : "非公開"}</td>
-        </tr>
-      `);
-
-      $fileItem.find(".download-btn").click(() => downloadFile(file.id));
-      $fileItem.find(".delete-btn").click(() => deleteFile(file.id));
-
-      $fileItem.find(".status-btn").click(() => {
-        toggleFileStatus(file.id, file.isPublic);  
-      });
-
-      $fileList.append($fileItem);  
+        $fileList.append($fileItem);  
     });
 
-    updateSelectAllCheckbox();  
+    updateSelectAllCheckbox();  // 更新全选复选框
   }
 
   function deleteFile(fileId) {
@@ -194,6 +181,11 @@ $(document).ready(function () {
     $pagination.append($nextPage);
   }
 
+  $("#selectAllCheckbox").click(function () {
+    const isChecked = $(this).prop("checked");  // 获取全选框是否被选中
+    $(".select-file-checkbox").prop("checked", isChecked);  // 设置所有复选框的状态
+  });
+
   function updateSelectAllCheckbox() {
     const totalCheckboxes = $(".select-file-checkbox").length;
     const checkedCheckboxes = $(".select-file-checkbox:checked").length;
@@ -240,6 +232,7 @@ $(document).ready(function () {
         alert("ファイル削除に失敗しました！");
       },
     });
+	$("#selectAllCheckbox").prop("checked", false)
   });
 
   $("#downloadSelectedBtn").click(function () {
@@ -254,43 +247,53 @@ $(document).ready(function () {
     }
 
     selectedFileIds.forEach(fileId => downloadFile(fileId));
+	$("#selectAllCheckbox").prop("checked", false)
   });
 
   function downloadFile(fileId) {
-    const downloadUrl = `http://localhost:8080/file/download/${fileId}`;
+      const downloadUrl = `http://localhost:8080/file/download/${fileId}`;
+      console.log('Download URL:', downloadUrl); // 输出下载 URL，确保 URL 正确
 
-    $.ajax({
-      url: downloadUrl,
-      type: 'GET',
-      xhrFields: {
-        responseType: 'blob', 
-      },
-      success: function (data, status, xhr) {
-        const contentDisposition = xhr.getResponseHeader('Content-Disposition');
-        let fileName = 'downloaded_file';
+      $.ajax({
+          url: downloadUrl,
+          type: 'GET',
+          xhrFields: {
+              responseType: 'blob', 
+          },
+          success: function (data, status, xhr) {
+              console.log('Download success. Status:', status); // 输出成功的状态
+              console.log('Response headers:', xhr.getAllResponseHeaders()); // 输出响应头，检查 Content-Disposition 等信息
 
-        if (contentDisposition && contentDisposition.includes('filename=')) {
-          fileName = contentDisposition
-            .split('filename=')[1]
-            .replace(/"/g, '')
-            .trim();
-        }
+              const contentDisposition = xhr.getResponseHeader('Content-Disposition');
+              let fileName = 'downloaded_file';
 
-        const blob = new Blob([data]);
-        const downloadLink = document.createElement('a');
-        downloadLink.href = window.URL.createObjectURL(blob);
-        downloadLink.download = fileName;
+              if (contentDisposition && contentDisposition.includes('filename=')) {
+                  fileName = contentDisposition
+                      .split('filename=')[1]
+                      .replace(/"/g, '')
+                      .trim();
+              }
 
-        document.body.appendChild(downloadLink);
-        downloadLink.click();
-        document.body.removeChild(downloadLink);
-      },
-      error: function (xhr, status, error) {
-        console.error('ファイルダウンロードに失敗しました:', error);
-        alert(`ファイルダウンロードに失敗しました: ${xhr.responseText || error}`);
-      },
-    });
+              console.log('File Name:', fileName); // 输出文件名，确认是否正确解析文件名
+
+              const blob = new Blob([data]);
+              const downloadLink = document.createElement('a');
+              downloadLink.href = window.URL.createObjectURL(blob);
+              downloadLink.download = fileName;
+
+              document.body.appendChild(downloadLink);
+              downloadLink.click();
+              document.body.removeChild(downloadLink);
+
+              console.log('Download initiated'); // 输出下载是否已触发
+          },
+          error: function (xhr, status, error) {
+              console.error('ファイルダウンロードに失敗しました:', error); // 错误时输出日志
+              console.error('XHR Response Text:', xhr.responseText); // 输出详细的响应文本，帮助调试错误信息
+              alert(`ファイルダウンロードに失敗しました: ${xhr.responseText || error}`); // 弹出失败提示
+          },
+      });
   }
 
-  fetchFiles();
-});
+    fetchFiles();
+  });

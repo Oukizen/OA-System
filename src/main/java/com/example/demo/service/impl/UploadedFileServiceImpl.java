@@ -21,7 +21,7 @@ import com.example.demo.utill.Pager;
 @Service
 public class UploadedFileServiceImpl implements UploadedFileService {
 
-	private String FILE_DIRECTORY = "C:/Users/hqq/git/OA-System/src/main/resources";
+	private String FILE_DIRECTORY = "D:/Users/hqq/oa/OA-System/src/main/resources/uploads";
 
 	@Autowired
 	private UploadFileMapper uploadFileMapper;
@@ -41,7 +41,7 @@ public class UploadedFileServiceImpl implements UploadedFileService {
 
 		UploadFile uploadedFile = new UploadFile();
 		uploadedFile.setName(file.getOriginalFilename());
-		uploadedFile.setUrl(fileName);
+		uploadedFile.setUrl(filePath.toString());
 		uploadedFile.setIsPublic(1);
 
 		uploadFileMapper.insertFile(uploadedFile);
@@ -54,7 +54,7 @@ public class UploadedFileServiceImpl implements UploadedFileService {
 		UploadFile uploadedFile = uploadFileMapper.getFileById(fileId);
 		if (uploadedFile != null) {
 
-			Path filePath = Paths.get(FILE_DIRECTORY, uploadedFile.getUrl());
+			Path filePath = Paths.get(uploadedFile.getUrl());
 			try {
 				Files.delete(filePath);
 				uploadFileMapper.deleteFile(fileId);
@@ -98,9 +98,24 @@ public class UploadedFileServiceImpl implements UploadedFileService {
 			throw new RuntimeException("ファイル ID のリストが空です");
 		}
 
-		int deletedRows = uploadFileMapper.batchDeleteFiles(ids);
+		for (Long id : ids) {
 
-		return deletedRows == ids.size();
+			UploadFile uploadedFile = uploadFileMapper.getFileById(id);
+			if (uploadedFile != null) {
+
+				Path filePath = Paths.get(uploadedFile.getUrl());
+				try {
+
+					Files.delete(filePath);
+					uploadFileMapper.deleteFile(id);
+				} catch (IOException e) {
+
+					e.printStackTrace();
+					return false;
+				}
+			}
+		}
+		return false;
 	}
 
 	// ファイル URL を取得

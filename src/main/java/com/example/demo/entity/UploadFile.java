@@ -2,7 +2,7 @@ package com.example.demo.entity;
 
 public class UploadFile {
 
-	private Long id; // 使用 Long 类型作为主键，自动增长
+	private Long id;
 	private String name;
 	private String url;
 	private int isPublic;

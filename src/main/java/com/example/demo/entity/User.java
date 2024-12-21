@@ -1,115 +1,107 @@
 package com.example.demo.entity;
 
-import jakarta.persistence.*;
-import org.hibernate.annotations.Formula;
-
-@Entity
-@Table(name = "user") // 数据库表名
 public class User {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
 
-    private String name;
-    private String password;
-    private String email;
-    private String phone;
-    private String sex;
-    private int syokui;
-    private Integer age;
-    private String address;
-    private String positionName;
-    @Lob
-    @Column(name = "photo", columnDefinition = "LONGBLOB", nullable = true)
-    private byte[] photo; // 用于存储员工照片
+	private Long id;
 
-    public byte[] getPhoto() {
-        return photo;
-    }
+	private String name;
+	private String password;
+	private String email;
+	private String phone;
+	private String sex;
+	private int syokui;
+	private Integer age;
+	private String address;
+	private String positionName;
 
-    public void setPhoto(byte[] photo) {
-        this.photo = photo;
-    }
+	private byte[] photo; // 用于存储员工照片
 
-    public String getPositionName() {
-        return positionName;
-    }
+	public byte[] getPhoto() {
+		return photo;
+	}
 
-    public void setPositionName(String positionName) {
-        this.positionName = positionName;
-    }
+	public void setPhoto(byte[] photo) {
+		this.photo = photo;
+	}
 
+	public String getPositionName() {
+		return positionName;
+	}
 
-    // 必须提供 Getter 和 Setter 方法
-    public Long getId() {
-        return id;
-    }
+	public void setPositionName(String positionName) {
+		this.positionName = positionName;
+	}
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+	// 必须提供 Getter 和 Setter 方法
+	public Long getId() {
+		return id;
+	}
 
-    public String getName() {
-        return name;
-    }
+	public void setId(Long id) {
+		this.id = id;
+	}
 
-    public void setName(String name) {
-        this.name = name;
-    }
+	public String getName() {
+		return name;
+	}
 
-    public String getPassword() {
-        return password;
-    }
+	public void setName(String name) {
+		this.name = name;
+	}
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
+	public String getPassword() {
+		return password;
+	}
 
-    public String getEmail() {
-        return email;
-    }
+	public void setPassword(String password) {
+		this.password = password;
+	}
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
+	public String getEmail() {
+		return email;
+	}
 
-    public String getPhone() {
-        return phone;
-    }
+	public void setEmail(String email) {
+		this.email = email;
+	}
 
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
+	public String getPhone() {
+		return phone;
+	}
 
-    public String getSex() {
-        return sex;
-    }
+	public void setPhone(String phone) {
+		this.phone = phone;
+	}
 
-    public void setSex(String sex) {
-        this.sex = sex;
-    }
+	public String getSex() {
+		return sex;
+	}
 
-    public int getSyokui() {
-        return syokui;
-    }
+	public void setSex(String sex) {
+		this.sex = sex;
+	}
 
-    public void setSyokui(int syokui) {
-        this.syokui = syokui;
-    }
+	public int getSyokui() {
+		return syokui;
+	}
 
-    public Integer getAge() {
-        return age;
-    }
+	public void setSyokui(int syokui) {
+		this.syokui = syokui;
+	}
 
-    public void setAge(Integer age) {
-        this.age = age;
-    }
+	public Integer getAge() {
+		return age;
+	}
 
-    public String getAddress() {
-        return address;
-    }
+	public void setAge(Integer age) {
+		this.age = age;
+	}
 
-    public void setAddress(String address) {
-        this.address = address;
-    }
+	public String getAddress() {
+		return address;
+	}
+
+	public void setAddress(String address) {
+		this.address = address;
+	}
 }
