@@ -1,88 +1,16 @@
-/* 页面布局 */
-.UpandDown {
-    width: 100%;
-    max-width: 900px;
-    margin: 0 auto;
-    padding: 50px;
-    background-color: #ffffff;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    border-radius: 8px;
-  }
-  
-  /* 表单布局 */
-  .UpandDown .form-container {
-    display: flex;
-    justify-content: space-between;
-    gap: 20px;
-  }
-  
-  .UpandDown form {
-    flex: 1;
-    background-color: #f4f7fc;
-    padding: 50px;
-    right: 50px;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  }
-
-  .UpandDown form input,
-  .UpandDown form button {
-    color: darkblue;
-    display: block;
-    width: 100%;
-    margin-bottom: 15px;
-  }
-
-  #uploadForm{
-   margin-right: 30px;
-
-  }
-
-  .UpandDown form button {
-    background-color: #0ca2e8;
-    color: white;
-    border: none;
-    padding: 10px;
-    border-radius: 4px;
-    cursor: pointer;
-  }
-  
-  .UpandDown form button:hover {
-    background-color: #b9c7e2;
-  }
-  
-  /* 表格样式 */
-  .UpandDown .file-table {
-    margin-top: 30px;
-  }
-  
-  .UpandDown .file-table table {
-    width: 100%;
-    border-collapse: collapse;
-  }
-  
-  .UpandDown .file-table th,
-  .UpandDown .file-table td {
-    border: 1px solid #ddd;
-    padding: 8px;
-    text-align: left;
-  }
-  
-  .UpandDown .file-table th {
-    background-color: #f4f4f4;
-    font-weight: bold;
-  }
-  
-  .UpandDown .file-table button {
-    background-color: #004080;
-    color: white;
-    border: none;
-    padding: 5px 10px;
-    border-radius: 4px;
-    cursor: pointer;
-  }
-  
-  .UpandDown .file-table button:hover {
-    background-color: #8080c0;
-  }
-  
+.content {
+  margin: 20px;
+}
+#fileList th,
+#fileList td {
+  padding: 10px;
+  text-align: center;
+}
+#pagination {
+  margin-top: 10px;
+  text-align: center;
+}
+#pagination button {
+  margin: 0 5px;
+  padding: 5px 10px;
+}
