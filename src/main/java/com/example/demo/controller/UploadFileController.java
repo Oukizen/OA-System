@@ -1,6 +1,7 @@
 package com.example.demo.controller;
 
 import java.io.IOException;
+import java.net.URLEncoder;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -19,7 +20,6 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -102,45 +102,38 @@ public class UploadFileController {
 		return success ? "redirect:/file" : "error"; // 根据 success 的值返回结果
 	}
 
-	// ファイルの公開/非公開ステータスの切り替え
-	@PutMapping("/file/{fileId}/toggle-status")
-	@ResponseBody
-	public String toggleFileStatus(@PathVariable Long fileId) {
-
-		UploadFile file = fileService.getFileById(fileId);
-		file.setIsPublic(file.getIsPublic() == 1 ? 0 : 1);
-		fileService.updateFile(file);
-		return "redirect:/file";
-
-	}
-
 	@GetMapping("/file/download/{fileId}")
 	@ResponseBody
 	public ResponseEntity<Resource> downloadFile(@PathVariable Long fileId) {
 		try {
-			String originalFileName = fileService.getFileNameById(fileId);
+			String originalFileName = fileService.getFileNameById(fileId); // 获取原文件名
+			System.out.println("文件名: " + originalFileName);
+
 			UploadFile uploadedFile = uploadFileMapper.getFileById(fileId);
+			Path filePath = Paths.get(uploadedFile.getUrl()); // 获取文件路径
 
-			Path filePath = Paths.get(uploadedFile.getUrl());
-
-			System.out.println("File Path: " + filePath);
+			// 创建 UrlResource 对象
 			Resource resource = new UrlResource(filePath.toUri());
 
-			if (resource.exists() && resource.isReadable()) {
+			if (Files.exists(filePath) && Files.isReadable(filePath)) {
+				// 获取文件的 MIME 类型
 				String contentType = Files.probeContentType(filePath);
 				if (contentType == null) {
-					contentType = "application/octet-stream"; // 如果无法确定 MIME 类型，返回二进制流
+					contentType = "application/octet-stream"; // 默认 MIME 类型
 				}
 
-				return ResponseEntity.ok()
-						.header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + originalFileName + "\"")
-						.header(HttpHeaders.CONTENT_TYPE, contentType).body(resource);
-			} else {
-				return ResponseEntity.status(HttpStatus.NOT_FOUND).build(); // 文件不可读取，返回404
-			}
-		} catch (Exception e) {
+				// 设置响应头
+				String encodedFileName = URLEncoder.encode(originalFileName, "UTF-8").replace("+", "%20");
+				String contentDisposition = "attachment; filename=\"" + encodedFileName + "\"";
 
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null); // 返回500错误
+				return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION, contentDisposition)
+						.header(HttpHeaders.CONTENT_TYPE, contentType)
+						.header(HttpHeaders.CONTENT_LENGTH, String.valueOf(Files.size(filePath))).body(resource);
+			} else {
+				return ResponseEntity.notFound().build();
+			}
+		} catch (IOException e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
 	}
 
