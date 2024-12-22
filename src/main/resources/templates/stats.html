@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>公告管理系统</title>
+    <!-- 引入 Material Design 图标库 (可选) -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/MaterialDesign-Webfont/6.9.96/css/materialdesignicons.min.css" rel="stylesheet">
+    <!-- 基本 CSS 样式 -->
+    <style>
+        /* 全局样式 */
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            display: flex;
+            height: 100vh;
+            background-color: #f4f6f9;
+        }
+
+        /* 侧边栏样式 */
+        .left-sidebar {
+            width: 240px;
+            background-color: #2f323e;
+            color: white;
+            height: 150%;
+            overflow-y: auto;
+            position: fixed;
+            top: 60px;  /* 调整位置，使左侧菜单不与OAシステム字样重叠 */
+            z-index: 1; /* 确保左侧菜单在顶部 */
+        }
+
+        .sidebar-nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .sidebar-item {
+            border-bottom: 1px solid #444;
+        }
+
+        .sidebar-link {
+            display: flex;
+            align-items: center;
+            padding: 12px 20px;
+            color: #b8c7ce;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .sidebar-link:hover {
+            background-color: #444;
+            color: white;
+        }
+
+        .sidebar-link i {
+            margin-right: 10px;
+            font-size: 18px;
+        }
+
+        .hide-menu {
+            font-size: 14px;
+        }
+
+        /* 主内容区域样式 */
+        .main-content {
+            margin-left: 240px;
+            padding: 20px;
+            flex: 1;
+        }
+
+        h1 {
+            font-size: 24px;
+            color: #333;
+        }
+
+        p {
+            font-size: 16px;
+            color: #555;
+        }
+
+        /* 顶部 OAシステム 和 管理者 字样 */
+        .header-container {
+            position: fixed;
+            top: 0; /* 顶部紧贴页面 */
+            left: 0; /* 左侧紧贴页面 */
+            right: 0; /* 右侧紧贴页面 */
+            background-color: #2f323e;
+            color: white;
+            padding: 5px 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 8px solid #444; /* 给容器添加边框 */
+            z-index: 2; /* 确保它显示在所有内容上面 */
+        }
+
+        .header-item {
+            padding: 0 10px;
+            font-weight: bold;
+        }
+
+        /* 右侧的管理者字样 */
+        .manager-label {
+            font-weight: bold;
+        }
+
+        /* 调整内边距，使容器离边缘更近 */
+        .header-container {
+            padding: 10px 20px; /* 增加内边距，保持文本不会紧贴边框 */
+        }
+
+        /* 公告列表样式 */
+        .announcement-list {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .announcement-item {
+            background-color: #fff;
+            padding: 15px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .announcement-item button {
+            background-color: #28a745;
+            color: white;
+            padding: 8px 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .announcement-item button:hover {
+            background-color: #218838;
+        }
+    </style>
+</head>
+<body>
+    <!-- 顶部 OAシステム 和 管理者 字样 -->
+    <div class="header-container">
+        <div class="header-item">OAシステム</div>
+        <div class="header-item manager-label">社員</div>
+    </div>
+
+    <!-- 左侧导航栏 -->
+    <aside class="left-sidebar" data-sidebarbg="skin5">
+        <div class="scroll-sidebar">
+            <nav class="sidebar-nav">
+                <ul id="sidebarnav">
+                    <li class="sidebar-item">
+                        <a class="sidebar-link waves-effect waves-dark sidebar-link" href="index.html" aria-expanded="false">
+                            <i class="mdi mdi-av-timer"></i>
+                            <span class="hide-menu">ホームページ</span>
+                        </a>
+                    </li>
+                    <li class="sidebar-item">
+                        <a class="sidebar-link waves-effect waves-dark sidebar-link" href="pages-profile.html" aria-expanded="false">
+                            <i class="mdi mdi-account-network"></i>
+                            <span class="hide-menu">ファイル管理</span>
+                        </a>
+                    </li>
+                    <li class="sidebar-item">
+                        <a class="sidebar-link waves-effect waves-dark sidebar-link" href="form-basic.html" aria-expanded="false">
+                            <i class="mdi mdi-arrange-bring-forward"></i>
+                            <span class="hide-menu">社員管理</span>
+                        </a>
+                    </li>
+                    <li class="sidebar-item">
+                        <a class="sidebar-link waves-effect waves-dark sidebar-link" href="stats.html" aria-expanded="false">
+                            <i class="mdi mdi-account-network"></i>
+                            <span class="hide-menu">公告</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </aside>
+
+    <!-- 主要内容区域 -->
+    <div class="main-content">
+        <h1>公告接受页面</h1>
+        <p>欢迎使用公告管理系统。在这里，您可以查看和接受公告。</p>
+
+        <!-- 公告列表 -->
+        <ul class="announcement-list" id="announcementList">
+            <!-- 公告项模板 -->
+            <li class="announcement-item">
+                <span>公告标题 1</span>
+                <button onclick="acceptAnnouncement(this)">接受</button>
+            </li>
+            <li class="announcement-item">
+                <span>公告标题 2</span>
+                <button onclick="acceptAnnouncement(this)">接受</button>
+            </li>
+            <li class="announcement-item">
+                <span>公告标题 3</span>
+                <button onclick="acceptAnnouncement(this)">接受</button>
+            </li>
+        </ul>
+    </div>
+
+    <script>
+        // 接受公告功能
+        function acceptAnnouncement(button) {
+            const announcementItem = button.parentElement;
+            announcementItem.style.backgroundColor = '#d4edda'; // 设置接受后的背景颜色
+            button.disabled = true; // 禁用接受按钮
+            button.textContent = '已接受'; // 更改按钮文本
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>公告管理系统</title>
+    <!-- 引入 Material Design 图标库 (可选) -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/MaterialDesign-Webfont/6.9.96/css/materialdesignicons.min.css" rel="stylesheet">
+    <!-- 基本 CSS 样式 -->
+    <style>
+        /* 全局样式 */
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            display: flex;
+            height: 100vh;
+            background-color: #f4f6f9;
+        }
+
+        /* 侧边栏样式 */
+        .left-sidebar {
+            width: 240px;
+            background-color: #2f323e; /* 与顶部一致的颜色 */
+            color: white;
+            height: 150%;
+            overflow-y: auto;
+            position: fixed;
+            top: 60px;
+            z-index: 1; /* 确保左侧菜单在顶部 */
+        }
+
+        .sidebar-nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .sidebar-item {
+            border-bottom: 1px solid #444;
+			background-color: #2f323e;
+        }
+
+        .sidebar-link {
+            display: flex;
+            align-items: center;
+            padding: 12px 20px;
+            color: #b8c7ce;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .sidebar-link:hover {
+            background-color: #444;
+            color: white;
+        }
+
+        .sidebar-link i {
+            margin-right: 10px;
+            font-size: 18px;
+        }
+
+        .hide-menu {
+            font-size: 14px;
+			
+        }
+
+        /* 主内容区域样式 */
+        .main-content {
+            margin-left: 240px;
+            padding: 20px;
+            flex: 1;
+        }
+
+        h1 {
+            font-size: 24px;
+            color: #f4f6f9;
+			top:100px
+        }
+
+        p {
+            font-size: 16px;
+            color: #555;
+        }
+
+        /* 顶部 OAシステム 和 管理者 字样 */
+        .header-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background-color: #2f323e;
+            color: white;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 8px solid #444;
+            z-index: 2;
+        }
+
+        .header-item {
+            padding: 0 10px;
+            font-weight: bold;
+        }
+
+        /* 右侧的管理者字样 */
+        .manager-label {
+            font-weight: bold;
+        }
+
+        /* 调整内边距，使容器离边缘更近 */
+        .header-container {
+            padding: 10px 20px;
+        }
+
+        .input-container {
+            margin-bottom: 20px;
+        }
+
+        textarea {
+            width: 100%;
+            height: 80px;
+            margin-bottom: 10px;
+            padding: 10px;
+            font-size: 14px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        li {
+            background-color: white;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .actions button {
+            margin-left: 10px;
+            background-color: #dc3545;
+        }
+
+        .actions button:hover {
+            background-color: #c82333;
+        }
+    </style>
+</head>
+<body>
+    <!-- 顶部 OAシステム 和 管理者 字样 -->
+    <div class="header-container">
+        <div class="header-item">OAシステム</div>
+        <div class="header-item manager-label">管理者</div>
+    </div>
+
+    <!-- 左侧导航栏 -->
+    <aside class="left-sidebar" data-sidebarbg="skin5">
+        <div class="scroll-sidebar">
+            <nav class="sidebar-nav">
+                <ul id="sidebarnav">
+                    <!-- ホームページ -->
+                    <li class="sidebar-item">
+                        <a class="sidebar-link waves-effect waves-dark sidebar-link" href="index.html" aria-expanded="false">
+                            <i class="mdi mdi-av-timer"></i>
+                            <span class="hide-menu">ホームページ</span>
+                        </a>
+                    </li>
+
+                    <!-- ファイル管理 -->
+                    <li class="sidebar-item">
+                        <a class="sidebar-link waves-effect waves-dark sidebar-link" href="pages-profile.html" aria-expanded="false">
+                            <i class="mdi mdi-account-network"></i>
+                            <span class="hide-menu">ファイル管理</span>
+                        </a>
+                    </li>
+
+                    <!-- 社員管理 -->
+                    <li class="sidebar-item">
+                        <a class="sidebar-link waves-effect waves-dark sidebar-link" href="form-basic.html" aria-expanded="false">
+                            <i class="mdi mdi-arrange-bring-forward"></i>
+                            <span class="hide-menu">社員管理</span>
+                        </a>
+                    </li>
+
+                    <!-- 公告 -->
+                    <li class="sidebar-item">
+                        <a class="sidebar-link waves-effect waves-dark sidebar-link" href="templates/stats.html" aria-expanded="false">
+                            <i class="mdi mdi-account-network"></i>
+                            <span class="hide-menu">公告</span>
+                        </a>
+                    </li>
+
+                    <!-- 公告編集 -->
+                    <li class="sidebar-item">
+                        <a class="sidebar-link waves-effect waves-dark sidebar-link" href="guanlizhe.html" aria-expanded="false">
+                            <i class="mdi mdi-account-network"></i>
+                            <span class="hide-menu">公告編集</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </aside>
+
+    <!-- 主要内容区域 -->
+    <div class="main-content">
+        <h1>公告管理系统</h1>
+
+        <!-- 公告输入区域 -->
+        <div class="input-container">
+            <textarea id="announcementInput" placeholder="公告内容入力"></textarea>
+            <button onclick="addAnnouncement()">送信</button>
+        </div>
+
+        <!-- 公告展示区域 -->
+        <ul id="announcementList"></ul>
+    </div>
+
+    <script>
+        // 获取公告列表容器
+        const announcementList = document.getElementById('announcementList');
+
+        // 发布公告
+        function addAnnouncement() {
+            const input = document.getElementById('announcementInput');
+            const content = input.value.trim();
+
+            if (content === '') {
+                alert('公告内容入力！');
+                return;
+            }
+
+            // 创建公告项
+            const listItem = document.createElement('li');
+            listItem.innerHTML = `
+                <span>${content}</span>
+                <div class="actions">
+                    <button onclick="editAnnouncement(this)">編集</button>
+                    <button onclick="deleteAnnouncement(this)">削除</button>
+                </div>
+            `;
+
+            // 添加到列表
+            announcementList.appendChild(listItem);
+
+            // 清空输入框
+            input.value = '';
+        }
+
+        // 删除公告
+        function deleteAnnouncement(button) {
+            const listItem = button.parentElement.parentElement;
+            announcementList.removeChild(listItem);
+        }
+
+        // 编辑公告
+        function editAnnouncement(button) {
+            const listItem = button.parentElement.parentElement;
+            const content = listItem.querySelector('span');
+            const newContent = prompt('新しい内容入力', content.textContent);
+
+            if (newContent && newContent.trim() !== '') {
+                content.textContent = newContent.trim();
+            }
+        }
+    </script>
+</body>
+</html>
