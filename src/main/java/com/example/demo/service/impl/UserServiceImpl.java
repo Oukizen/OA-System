@@ -15,26 +15,26 @@ public class UserServiceImpl implements UserService {
 	@Autowired
 	private UserMapper userMapper;
 
-	// 获取所有用户
 	@Override
 	public List<User> findAll() {
-		return userMapper.findAll(); // 调用 UserMapper 中的 findAll 方法
+		return userMapper.findAll();
 	}
 
-	// 根据ID查找用户
 	@Override
 	public User findById(int id) {
-		return userMapper.findById((long) id).orElse(null); // 根据ID查找用户
+		return userMapper.findById((long) id).orElse(null);
 	}
 
-	// 保存用户
 	@Override
 	public User save(User user) {
-		userMapper.save(user);
+		if (user.getId() == null) {
+			userMapper.save(user); // 新增
+		} else {
+			userMapper.update(user); // 更新
+		}
 		return user;
 	}
 
-	// 根据ID删除用户
 	@Override
 	public void deleteById(int id) {
 		userMapper.deleteById((long) id);

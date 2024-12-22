@@ -8,6 +8,7 @@ import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Options;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 
 import com.example.demo.entity.User;
 
@@ -27,6 +28,10 @@ public interface UserMapper {
 			+ "VALUES(#{name}, #{password}, #{email}, #{phone}, #{sex}, #{syokui}, #{age}, #{address}, #{positionName}, #{photo})")
 	@Options(useGeneratedKeys = true, keyProperty = "id", keyColumn = "id")
 	void save(User user);
+
+	@Update("UPDATE user SET name = #{name}, password = #{password}, email = #{email}, phone = #{phone}, sex = #{sex}, syokui = #{syokui}, "
+			+ "age = #{age}, address = #{address}, position_name = #{positionName}, photo = #{photo} WHERE id = #{id}")
+	void update(User user);
 
 	@Delete("DELETE FROM user WHERE id = #{id}")
 	void deleteById(Long id);
