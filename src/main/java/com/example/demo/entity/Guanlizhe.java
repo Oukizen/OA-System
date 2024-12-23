@@ -1,36 +1,19 @@
 package com.example.demo.entity;
 
-
 import java.time.LocalDateTime;
 
-
-
 public class Guanlizhe {
+    private Long statsId;       // stats_id 对应的 Java 字段
+    private LocalDateTime statsTime; // stats_time 对应的 Java 字段
+    private String statsNr;     // stats_nr 对应的 Java 字段
 
-
-    private Long id;
-
-
-    private LocalDateTime statsTime;
-
-    private String statsNr;
-
-    // 默认构造方法
-    public Guanlizhe() {}
-
-    // 构造方法
-    public Guanlizhe(LocalDateTime statsTime, String statsNr) {
-        this.statsTime = statsTime;
-        this.statsNr = statsNr;
+    // Getters and Setters
+    public Long getStatsId() {
+        return statsId;
     }
 
-    // Getter 和 Setter 方法
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
+    public void setStatsId(Long statsId) {
+        this.statsId = statsId;
     }
 
     public LocalDateTime getStatsTime() {

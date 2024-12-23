@@ -1,8 +1,26 @@
 package com.example.demo.mapper;
 
-import com.example.demo.entity.Stats;
-import org.springframework.data.jpa.repository.JpaRepository;
+import com.example.demo.entity.Guanlizhe;
+import org.apache.ibatis.annotations.*;
 
-public interface StatsRepository extends JpaRepository<Stats, Long> {
-    // 这里你可以根据需要定义更多的查询方法，例如根据时间获取公告等。
+import java.util.List;
+
+@Mapper
+public interface GuanlizheMapper {
+
+    @Select("SELECT * FROM stats_table")
+    List<Guanlizhe> findAll();
+
+    @Select("SELECT * FROM stats_table WHERE stats_id = #{statsId}")
+    Guanlizhe findById(Long statsId);
+
+    @Insert("INSERT INTO stats_table (stats_time, stats_nr) VALUES (#{statsTime}, #{statsNr})")
+    @Options(useGeneratedKeys = true, keyProperty = "statsId")
+    void save(Guanlizhe Guanlizhe);
+
+    @Update("UPDATE stats_table SET stats_time = #{statsTime}, stats_nr = #{statsNr} WHERE stats_id = #{statsId}")
+    void update(Guanlizhe Guanlizhe);
+
+    @Delete("DELETE FROM stats_table WHERE stats_id = #{statsId}")
+    void deleteById(Long statsId);
 }
