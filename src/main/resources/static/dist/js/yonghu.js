@@ -47,7 +47,7 @@ function showUserForm(user = null) {
           </div>
           <div class="form-group">
             <label>パスワード</label>
-            <input type="password" name="password" ${user ? '' : 'required'}>
+            <input type="password" name="password"  value="${user ? user.password :'' }"required'}>
           </div>
           <div class="form-group">
             <label>メール</label>
@@ -94,7 +94,7 @@ function showUserForm(user = null) {
     // 修改 modal 内容的位置，使其靠近页面顶部
     const modalContent = document.querySelector('.modal-content');
     modalContent.style.position = 'relative';
-    modalContent.style.marginTop = '30px'; // 上移10px，你可以调整这个值
+    modalContent.style.marginTop = '100px'; // 上移10px，你可以调整这个值
 
     document.getElementById('userForm').addEventListener('submit', function(e) {
         e.preventDefault();
