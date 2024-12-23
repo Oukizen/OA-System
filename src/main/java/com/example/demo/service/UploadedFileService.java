@@ -11,24 +11,27 @@ import com.example.demo.utill.Pager;
 
 public interface UploadedFileService {
 
-	UploadFile storeFile(MultipartFile file) throws IOException;
+    UploadFile storeFile(MultipartFile file) throws IOException;
 
-	boolean deleteFile(Long fileId);
+    boolean deleteFile(Long fileId);
 
-	List<UploadFile> getAllFiles();
+    List<UploadFile> getAllFiles();
 
-	UploadFile getFileById(Long fileId);
+    UploadFile getFileById(Long fileId);
 
-	boolean batchDeleteFiles(List<Long> ids) throws IOException;
+    boolean batchDeleteFiles(List<Long> ids) throws IOException;
 
-	Resource downloadFile(Long fileId);
+    Resource downloadFile(Long fileId);
 
-	String getFileNameById(Long fileId);
+    String getFileNameById(Long fileId);
 
-	String getFileUrlById(Long fileId);
+    String getFileUrlById(Long fileId);
 
-	UploadFile updateFile(UploadFile file);
+    UploadFile updateFile(UploadFile file);
 
-	Pager<UploadFile> getFilesByPage(int page, int size, String name);
+    Pager<UploadFile> getFilesByPage(int page, int size, String name);
 
+    // 新增方法：获取文件总数
+    long getFileCount();
 }
+

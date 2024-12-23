@@ -35,4 +35,15 @@ public interface UserMapper {
 
 	@Delete("DELETE FROM user WHERE id = #{id}")
 	void deleteById(Long id);
+
+	// 新增方法：统计用户总数
+	@Select("SELECT COUNT(*) FROM user")
+	int countAllUsers();
+
+	@Select("SELECT COUNT(*) FROM user WHERE sex = '男'")
+	int countMaleUsers();
+
+	@Select("SELECT COUNT(*) FROM user WHERE sex = '女'")
+	int countFemaleUsers();
+
 }

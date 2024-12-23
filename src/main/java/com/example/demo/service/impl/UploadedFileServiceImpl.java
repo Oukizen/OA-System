@@ -171,4 +171,10 @@ public class UploadedFileServiceImpl implements UploadedFileService {
 		return new Pager<>(page, size, files, total);
 	}
 
+	@Override
+	public long getFileCount() {
+	    // 调用 Mapper 的方法获取文档总数
+	    return uploadFileMapper.getTotalCount(null); // 参数为 null 表示不限制条件
+	}
+
 }
