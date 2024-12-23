@@ -122,21 +122,7 @@ h1 {
     text-decoration: none;
 }
 
-.logo-icon {
-    display: flex;
-    align-items: center;
-}
 
-.logo-text {
-    display: flex;
-    align-items: center;
-}
-
-.logo-icon img,
-.logo-text img {
-    max-height: 35px;
-    vertical-align: middle;
-}
 footer {
     background-color: #233242;
     padding: 15px;
