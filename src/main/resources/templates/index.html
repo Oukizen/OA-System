@@ -100,12 +100,7 @@
                                         <span>Search</span>
                                     </div>
                                 </div>
-                            </a>
-                            <form class="app-search position-absolute">
-                                <input type="text" class="form-control" placeholder="Search &amp; enter">
-                                <a class="srh-btn">
-                                    <i class="ti-close"></i>
-                                </a>
+                           
                             </form>
                         </li>
                     </ul>
@@ -150,28 +145,19 @@
                             </a>
                         </li>
                         <li class="sidebar-item">
-                            <a class="sidebar-link waves-effect waves-dark sidebar-link" href="pages-profile.html" aria-expanded="false">
-                                <i class="mdi mdi-account-network"></i>
-                                <span class="hide-menu">Profile</span>
-                            </a>
+                           <a class="sidebar-link waves-effect waves-dark sidebar-link" href="/stats" aria-expanded="false">
+    <i class="mdi mdi-account-network"></i>
+    <span class="hide-menu">公告管理</span>
+</a>
                         </li>
                          <li class="sidebar-item">
-                            <a class="sidebar-link waves-effect waves-dark sidebar-link" href="form-basic.html" aria-expanded="false">
-                                <i class="mdi mdi-arrange-bring-forward"></i>
-                                <span class="hide-menu">Form Basic</span>
-                            </a>
+                           
                         </li>
                         <li class="sidebar-item">
-                            <a class="sidebar-link waves-effect waves-dark sidebar-link" href="table-basic.html" aria-expanded="false">
-                                <i class="mdi mdi-border-none"></i>
-                                <span class="hide-menu">Table</span>
-                            </a>
+                           
                         </li>
                         <li class="sidebar-item">
-                            <a class="sidebar-link waves-effect waves-dark sidebar-link" href="icon-material.html" aria-expanded="false">
-                                <i class="mdi mdi-face"></i>
-                                <span class="hide-menu">Icon</span>
-                            </a>
+                           
                         </li>
                         <li class="sidebar-item">
                             <a class="sidebar-link waves-effect waves-dark sidebar-link" href="file" aria-expanded="false">
@@ -187,10 +173,7 @@
                             </a>
                         </li>
                         <li class="sidebar-item">
-                            <a class="sidebar-link waves-effect waves-dark sidebar-link" href="error-404.html" aria-expanded="false">
-                                <i class="mdi mdi-alert-outline"></i>
-                                <span class="hide-menu">404</span>
-                            </a>
+                           
                         </li>
                     </ul>
                 </nav>
@@ -252,7 +235,7 @@
     <!-- 性別割合 图表 -->
 <div class="card" style="height: 400px; max-width: 600px; margin-left: 60px;">
     <div class="card-body">
-        <h5 class="card-title">性别比例</h5>
+        <h5 class="card-title">性別割合</h5>
         <canvas id="genderChart"></canvas>
     </div>
 </div>
@@ -280,7 +263,7 @@
                     <div class="col-md-8">
     <div class="card" style="height: 400px;">
         <div class="card-body">
-            <h4 class="card-title">文档数量</h4>
+            <h4 class="card-title">ファイル総件数</h4>
             <canvas id="documentChart"></canvas>
         </div>
     </div>
@@ -401,9 +384,9 @@ fetch('/api/document-count')
         new Chart(ctx, {
             type: 'bar',
             data: {
-                labels: ['文档总数'],
+                labels: ['ファイル総件数'],
                 datasets: [{
-                    label: '文档数量',
+                    label: 'ファイル数',
                     data: [data.document_count],
                     backgroundColor: 'rgba(153, 102, 255, 0.5)',
                     borderColor: 'rgba(153, 102, 255, 1)',

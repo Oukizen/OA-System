@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>公告管理系统</title>
+    <title>公告管理システム</title>
     <!-- 引入 Material Design 图标库 (可选) -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/MaterialDesign-Webfont/6.9.96/css/materialdesignicons.min.css" rel="stylesheet">
     <!-- 基本 CSS 样式 -->
@@ -65,7 +65,7 @@
         /* 主内容区域样式 */
         .main-content {
             margin-left: 240px;
-            padding: 20px;
+            padding: 80px 20px; /* 增加顶部内边距以避开导航栏 */
             flex: 1;
         }
 
@@ -87,7 +87,7 @@
             right: 0; /* 右侧紧贴页面 */
             background-color: #2f323e;
             color: white;
-            padding: 5px 15px;
+            padding: 10px 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -184,8 +184,8 @@
 
     <!-- 主要内容区域 -->
     <div class="main-content">
-        <h1>公告接受页面</h1>
-        <p>欢迎使用公告管理系统。在这里，您可以查看和接受公告。</p>
+        <h1>公告受信ページ</h1>
+        <p>公告管理システムへようこそ。ここでは、公告の閲覧や受信が可能です。</p>
 
         <!-- 公告列表 -->
         <ul class="announcement-list" id="announcementList">
