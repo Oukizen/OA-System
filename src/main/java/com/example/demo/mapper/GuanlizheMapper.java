@@ -16,10 +16,10 @@ public interface GuanlizheMapper {
 
     @Insert("INSERT INTO stats_table (stats_time, stats_nr) VALUES (#{statsTime}, #{statsNr})")
     @Options(useGeneratedKeys = true, keyProperty = "statsId")
-    void save(Guanlizhe Guanlizhe);
+    void save(Guanlizhe stats_nr);
 
     @Update("UPDATE stats_table SET stats_time = #{statsTime}, stats_nr = #{statsNr} WHERE stats_id = #{statsId}")
-    void update(Guanlizhe Guanlizhe);
+    void update(Guanlizhe statsTime);
 
     @Delete("DELETE FROM stats_table WHERE stats_id = #{statsId}")
     void deleteById(Long statsId);

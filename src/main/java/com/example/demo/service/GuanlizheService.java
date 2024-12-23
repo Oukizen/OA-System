@@ -6,8 +6,9 @@ import java.util.List;
 
 public interface GuanlizheService {
     List<Guanlizhe> getAllStats();
-    Guanlizhe getStatsById(Long statsId);
+    Guanlizhe getGuanlizheById1(Long statsId);
     void createStats(Guanlizhe stats);
     void updateStats(Guanlizhe stats);
     void deleteStats(Long statsId);
+
 }

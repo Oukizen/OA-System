@@ -9,12 +9,12 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
-public classGuanlizheServiceImpl implements GuanlizheService {
+public class GuanlizheServicelmpl implements GuanlizheService {
 
     private final GuanlizheMapper guanlizheMapper;
 
-    public GuanlizheGuanlizheServiceImpl(StatsMapper statsMapper) {
-        this.statsMapper = guanlizheMapper;
+    public GuanlizheServicelmpl(GuanlizheMapper guanlizheMapper) {
+        this.guanlizheMapper = guanlizheMapper;
     }
 
     @Override
@@ -23,23 +23,29 @@ public classGuanlizheServiceImpl implements GuanlizheService {
     }
 
     @Override
-    public Guanlizhe getGuanlizheById(Long statsId) {
+    public Guanlizhe getGuanlizheById1(Long statsId) {
         return guanlizheMapper.findById(statsId);
     }
 
     @Override
     public void createStats(Guanlizhe guanlizhe) {
-        stats.setStatsTime(LocalDateTime.now()); // 设置当前时间
+        guanlizhe.setStatsTime(LocalDateTime.now()); // 设置当前时间
         guanlizheMapper.save(guanlizhe);
     }
 
     @Override
     public void updateStats(Guanlizhe guanlizhe) {
-    	guanlizheMapper.update(guanlizhe);
+        guanlizheMapper.update(guanlizhe);
     }
 
     @Override
     public void deleteStats(Long statsId) {
-    	guanlizheMapper.deleteById(statsId);
+        guanlizheMapper.deleteById(statsId);
     }
+
+	@Override
+	public Guanlizhe getGuanlizheById(Long statsId) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }
