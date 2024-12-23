@@ -1,39 +1,40 @@
-body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    background-color: #1F2937;
+header1 {
+    background-color: #ffffff; /* 白色背景 */
+    padding: 20px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* 添加阴影效果 */
+    margin-bottom: 20px;
     display: flex;
-}
-
-.sidebar {
-    width: 250px;
-    background-color: #1f2937;
-    height: 100vh;
-    color: white;
-    padding-top: 20px;
-    display: flex;
-    flex-direction: column;
+    justify-content: space-between;
     align-items: center;
 }
 
-.sidebar a {
-    width: 100%;
-    padding: 15px;
-    text-align: center;
-    text-decoration: none;
-    color: white;
+header h11 {
+    margin: 0;
+    color: #333; /* 深色文字 */
+    font-size: 24px;
+}
+
+.user-welcome1 {
+    background-color: #f5f5f5; /* 浅灰色背景 */
+    padding: 10px 20px;
+    border-radius: 4px;
+}
+
+.user-welcome span1 {
+    color: #666; /* 中等深度的灰色文字 */
     font-size: 16px;
-    margin-bottom: 10px;
-    border-radius: 5px;
-    transition: background-color 0.3s ease;
 }
-
-.sidebar a:hover {
-    background-color: #ffffff;
-    color: #1f2937;
+#add-user-btn {
+    background-color: #4CAF50;
+    color: white;
 }
-
+.action-btn {
+    padding: 13px 18px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    cursor: pointer;
+    margin-right: 10px;
+}
 .main-content {
     flex-grow: 1;
     padding: 10px;
@@ -41,68 +42,20 @@ body {
     min-height: 100vh;
 }
 
-header {
-    background-color: #1f2937;
-    color: white;
-    padding: 10px 20px;
-    text-align: center;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.table-container {
-    margin: 20px 0;
-    overflow-x: auto;
-}
-
-#user-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 20px;
-}
-
-#user-table th,
-#user-table td {
-    padding: 12px;
-    text-align: left;
-    border: 1px solid #ddd;
-}
-
-#user-table th {
-    background-color: #1f2937;
-    color: white;
-}
-
-#user-table tr:nth-child(even) {
-    background-color: #f2f2f2;
-}
-
-#user-table tr:hover {
-    background-color: #ddd;
-}
-
-.action-btn {
-    padding: 8px 15px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    margin: 5px;
-}
-
-#add-user-btn {
-    background-color: #4CAF50;
-    color: white;
-}
-
 .edit-btn {
-    background-color: #2196F3;
+    background-color: #4CAF50;
     color: white;
 }
 
 .delete-btn {
     background-color: #f44336;
     color: white;
+}
+
+.details-btn {
+    background-color: #008CBA;
+    color: white;
+    text-decoration: none;
 }
 
 .modal {
@@ -154,4 +107,55 @@ h1 {
     font-size: 32px;  /* 设置标题的字体大小 */
     color: white;
     font-weight: bold;
+}
+.navbar-brand {
+    padding: 0;
+    margin: 0;
+    height: 70px;
+    display: flex;
+    align-items: center;
+}
+
+.navbar-brand .logo {
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+}
+
+.logo-icon {
+    display: flex;
+    align-items: center;
+}
+
+.logo-text {
+    display: flex;
+    align-items: center;
+}
+
+.logo-icon img,
+.logo-text img {
+    max-height: 35px;
+    vertical-align: middle;
+}
+footer {
+    background-color: #233242;
+    padding: 15px;
+    text-align: center;
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+}
+
+footer p {
+    color: white;
+    margin: 0;
+}
+header1 {
+    background-color: #1f2937;
+    color: white;
+    padding: 10px 20px;
+    text-align: center;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }

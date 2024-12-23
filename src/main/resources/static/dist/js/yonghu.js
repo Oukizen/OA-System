@@ -38,7 +38,7 @@ function showUserForm(user = null) {
     const modalHtml = `
     <div id="userModal" class="modal">
       <div class="modal-content">
-        <h2>${user ? 'ユーザー編集' : '新規ユーザー'}</h2>
+        <h2>${user ? '従業員編集' : '新規従業員'}</h2>
         <form id="userForm">
           <input type="hidden" name="id" value="${user ? user.id : ''}">
           <div class="form-group">
@@ -72,10 +72,10 @@ function showUserForm(user = null) {
              <label>職位</label>
              <select name="syokui">
                <option value="1" ${user && user.syokui === '1' ? 'selected' : ''}>社長</option>
-             <option value="2" ${user && user.syokui === '2' ? 'selected' : ''}>マネジャー</option>
-             <option value="3" ${user && user.syokui === '3' ? 'selected' : ''}>社員</option>
+               <option value="2" ${user && user.syokui === '2' ? 'selected' : ''}>マネジャー</option>
+               <option value="3" ${user && user.syokui === '3' ? 'selected' : ''}>社員</option>
             </select>
-            </div>
+          </div>
           <div class="form-group">
             <label>年齢</label>
             <input type="number" name="age" value="${user ? user.age : ''}" required>
@@ -90,6 +90,11 @@ function showUserForm(user = null) {
 
     document.body.insertAdjacentHTML('beforeend', modalHtml);
     document.getElementById('userModal').style.display = 'block';
+
+    // 修改 modal 内容的位置，使其靠近页面顶部
+    const modalContent = document.querySelector('.modal-content');
+    modalContent.style.position = 'relative';
+    modalContent.style.marginTop = '30px'; // 上移10px，你可以调整这个值
 
     document.getElementById('userForm').addEventListener('submit', function(e) {
         e.preventDefault();
@@ -110,6 +115,8 @@ function showUserForm(user = null) {
             });
     });
 }
+
+
 
 
 function editUser(id) {
