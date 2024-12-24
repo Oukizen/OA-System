@@ -23,6 +23,9 @@ public interface UserMapper {
 
 	@Select("SELECT * FROM user WHERE id = #{id}")
 	Optional<User> findById(Long id);
+	
+	@Select("SELECT * FROM user WHERE email = #{email}")
+	Optional<User> findByEmail(String email);
 
 	@Insert("INSERT INTO user(name, password, email, phone, sex, syokui, age, address, position_name, photo) "
 			+ "VALUES(#{name}, #{password}, #{email}, #{phone}, #{sex}, #{syokui}, #{age}, #{address}, #{positionName}, #{photo})")

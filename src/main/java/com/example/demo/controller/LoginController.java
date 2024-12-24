@@ -15,27 +15,26 @@ import com.example.demo.mapper.UserMapper;
 @Controller
 public class LoginController {
 
-	@Autowired
-	private UserMapper userRepository;
+    @Autowired
+    private UserMapper userRepository;
 
-	// ログインページを表示
-	@GetMapping("/login")
-	public String loginPage() {
-		return "login"; // templates/login.html を返す
-	}
+    // ログインページを表示
+    @GetMapping("/login")
+    public String loginPage() {
+        return "login"; // templates/login.html を返す
+    }
 
-	// ログインリクエストを処理
-	@PostMapping("/login")
-	public String login(@RequestParam("username") String username, @RequestParam("password") String password,
-			Model model) {
-		// 用户名和密码验证
-		Optional<User> optionalUser = userRepository.findByName(username);
+    // ログインリクエストを処理
+    @PostMapping("/login")
+    public String login(@RequestParam("email") String email, @RequestParam("password") String password, Model model) {
+        // 邮箱和密码验证
+        Optional<User> optionalUser = userRepository.findByEmail(email); // 改为用 email 查询
 
-		if (optionalUser.isPresent() && optionalUser.get().getPassword().equals(password)) {
-			return "redirect:/home"; // 登录成功后重定向到主页 /home
-		} else {
-			model.addAttribute("error", "ユーザー名またはパスワードが正しくありません");
-			return "login"; // 登录失败，返回 login 页面
-		}
-	}
+        if (optionalUser.isPresent() && optionalUser.get().getPassword().equals(password)) {
+            return "redirect:/home"; // 登录成功后重定向到主页 /home
+        } else {
+            model.addAttribute("error", "メールアドレスまたはパスワードが正しくありません");
+            return "login"; // 登录失败，返回 login 页面
+        }
+    }
 }
