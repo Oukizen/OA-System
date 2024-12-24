@@ -173,6 +173,8 @@ function filterUsersnum() {
 function resetSearch() {
     const searchInput = document.getElementById('search-input-id');
     searchInput.value = "";
+    const searchInput1 = document.getElementById('search-input');
+    searchInput1.value = "";
     filterUsersnum();
 }
 
