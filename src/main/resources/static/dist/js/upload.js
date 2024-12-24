@@ -123,6 +123,11 @@ $(document).ready(function () {
   }
 
   function deleteFile(fileId) {
+    // 确认删除弹窗
+    if (!window.confirm('本当にこのファイルを削除しますか？')) {
+      return; // 如果用户取消，直接返回
+    }
+
     $.ajax({
       url: `http://localhost:8080/file/${fileId}`,
       type: 'DELETE',
@@ -218,6 +223,11 @@ $(document).ready(function () {
     if (selectedFileIds.length === 0) {
       alert("削除するファイルを選択してください！");
       return;
+    }
+
+    // 确认删除弹窗
+    if (!window.confirm(`選択された ${selectedFileIds.length} 件のファイルを削除しますか？`)) {
+      return; // 如果用户取消，直接返回
     }
 
     $.ajax({
