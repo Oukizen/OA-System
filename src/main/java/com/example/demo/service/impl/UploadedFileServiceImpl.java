@@ -115,7 +115,7 @@ public class UploadedFileServiceImpl implements UploadedFileService {
 				}
 			}
 		}
-		return false;
+		return true;
 	}
 
 	// ファイル URL を取得
@@ -173,8 +173,8 @@ public class UploadedFileServiceImpl implements UploadedFileService {
 
 	@Override
 	public long getFileCount() {
-	    // 调用 Mapper 的方法获取文档总数
-	    return uploadFileMapper.getTotalCount(null); // 参数为 null 表示不限制条件
+		// 调用 Mapper 的方法获取文档总数
+		return uploadFileMapper.getTotalCount(null); // 参数为 null 表示不限制条件
 	}
 
 }

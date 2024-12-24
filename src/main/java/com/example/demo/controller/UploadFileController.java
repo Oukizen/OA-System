@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -90,39 +91,57 @@ public class UploadFileController {
 	@ResponseBody
 	public String batchDelete(@RequestBody Map<String, List<Long>> fileIds) {
 		List<Long> ids = fileIds.get("fileIds");
-		boolean success = false; // 初始化 success
+		boolean success = false;
 
 		try {
 			success = fileService.batchDeleteFiles(ids);
 		} catch (IOException e) {
 			e.printStackTrace();
-			return "error"; // 如果发生异常，直接返回错误信息
+			return "error";
 		}
 
-		return success ? "redirect:/file" : "error"; // 根据 success 的值返回结果
+		return success ? "redirect:/file" : "error";
+	}
+
+	@PutMapping("/file/{fileId}/toggle-status")
+	public ResponseEntity<UploadFile> toggleFileStatus(@PathVariable Long fileId) {
+		try {
+
+			UploadFile file = fileService.getFileById(fileId);
+
+			if (file == null) {
+				return ResponseEntity.notFound().build();
+			}
+			if (file.getIsPublic() == 1) {
+				file.setIsPublic(0);
+			} else {
+				file.setIsPublic(1);
+			}
+			UploadFile updatedFile = fileService.updateFile(file);
+			return ResponseEntity.ok(updatedFile);
+		} catch (Exception e) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+		}
 	}
 
 	@GetMapping("/file/download/{fileId}")
 	@ResponseBody
 	public ResponseEntity<Resource> downloadFile(@PathVariable Long fileId) {
 		try {
-			String originalFileName = fileService.getFileNameById(fileId); // 获取原文件名
-			System.out.println("文件名: " + originalFileName);
+			String originalFileName = fileService.getFileNameById(fileId);
 
 			UploadFile uploadedFile = uploadFileMapper.getFileById(fileId);
-			Path filePath = Paths.get(uploadedFile.getUrl()); // 获取文件路径
+			Path filePath = Paths.get(uploadedFile.getUrl());
 
-			// 创建 UrlResource 对象
 			Resource resource = new UrlResource(filePath.toUri());
 
 			if (Files.exists(filePath) && Files.isReadable(filePath)) {
-				// 获取文件的 MIME 类型
+
 				String contentType = Files.probeContentType(filePath);
 				if (contentType == null) {
-					contentType = "application/octet-stream"; // 默认 MIME 类型
+					contentType = "application/octet-stream";
 				}
 
-				// 设置响应头
 				String encodedFileName = URLEncoder.encode(originalFileName, "UTF-8").replace("+", "%20");
 				String contentDisposition = "attachment; filename=\"" + encodedFileName + "\"";
 

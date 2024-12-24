@@ -56,7 +56,7 @@ $(document).ready(function () {
     });
 
     $.ajax({
-        url: "http://localhost:8080/file/list", // 更新URL以匹配返回JSON数据的接口
+        url: "http://localhost:8080/file/list", 
         type: "GET",
         data: {
             page: currentPage,
@@ -66,17 +66,17 @@ $(document).ready(function () {
         success: function (res) {
             console.log("ファイル検索の応答：", res);
 
-            if (res && res.data && Array.isArray(res.data)) { // 检查响应数据
-                uploadedFiles = res.data || [];  // 获取文件列表
-                total = res.total || 0;          // 获取总文件数量
-                totalPages = Math.ceil(total / pageSize); // 计算总页数
-                renderFileList(uploadedFiles);  // 渲染文件列表
-                renderPagination();             // 渲染分页
+            if (res && res.data && Array.isArray(res.data)) { 
+                uploadedFiles = res.data || []; 
+                total = res.total || 0;        
+                totalPages = Math.ceil(total / pageSize); 
+                renderFileList(uploadedFiles); 
+                renderPagination();             
             } else {
                 uploadedFiles = [];
                 total = 0;  
                 totalPages = 0;
-                renderFileList(uploadedFiles);  // 渲染空文件列表
+                renderFileList(uploadedFiles); 
             }
         },
         error: function (xhr, status, error) {
