@@ -125,7 +125,7 @@ $(document).ready(function () {
   function deleteFile(fileId) {
     // 确认删除弹窗
     if (!window.confirm('本当にこのファイルを削除しますか？')) {
-      return; // 如果用户取消，直接返回
+      return; 
     }
 
     $.ajax({

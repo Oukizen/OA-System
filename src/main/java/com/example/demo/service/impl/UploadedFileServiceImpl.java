@@ -1,5 +1,6 @@
 package com.example.demo.service.impl;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -21,27 +22,40 @@ import com.example.demo.utill.Pager;
 @Service
 public class UploadedFileServiceImpl implements UploadedFileService {
 
-	private String FILE_DIRECTORY = "D:/Users/hqq/oa/OA-System/src/main/resources/uploads";
+	private String FILE_DIRECTORY = "src/main/resources/uploads";
 
 	@Autowired
 	private UploadFileMapper uploadFileMapper;
 
-	// ファイルアップロード
 	public UploadFile storeFile(MultipartFile file) throws IOException {
 
-		Path path = Paths.get(FILE_DIRECTORY);
-		if (!Files.exists(path)) {
-			Files.createDirectories(path);
+		String projectPath = System.getProperty("user.dir");
+		String filesPath = projectPath + "/src/main/resources/uploads";
+
+		File parentFile = new File(filesPath);
+		if (!parentFile.exists()) {
+			parentFile.mkdirs(); // 创建上传目录
 		}
 
-		String fileName = UUID.randomUUID().toString() + "-" + file.getOriginalFilename();
-		Path filePath = path.resolve(fileName);
+		String originalFilename = file.getOriginalFilename();
+		if (originalFilename == null || originalFilename.isEmpty()) {
+			throw new RuntimeException("文件名无效");
+		}
 
-		file.transferTo(filePath.toFile());
+		// 提取文件的扩展名
+		int dotIndex = originalFilename.lastIndexOf(".");
+		String extName = (dotIndex == -1) ? "" : originalFilename.substring(dotIndex); // 包括 "."
 
+		// 生成唯一文件名用于存储
+		String uniqueName = UUID.randomUUID().toString() + extName;
+		File saveFile = new File(filesPath + "/" + uniqueName);
+
+		file.transferTo(saveFile); // 保存文件
+
+		// 数据库中保存文件信息
 		UploadFile uploadedFile = new UploadFile();
-		uploadedFile.setName(file.getOriginalFilename());
-		uploadedFile.setUrl(filePath.toString());
+		uploadedFile.setName(originalFilename); // 保存原始文件名
+		uploadedFile.setUrl(saveFile.getPath()); // 保存文件实际存储路径
 		uploadedFile.setIsPublic(1);
 
 		uploadFileMapper.insertFile(uploadedFile);
@@ -74,21 +88,28 @@ public class UploadedFileServiceImpl implements UploadedFileService {
 
 	// ファイルダウンロード
 	public Resource downloadFile(Long fileId) {
+		// 从数据库获取文件名
 		String fileName = getFileNameById(fileId);
-		if (fileName == null) {
-			throw new RuntimeException("ファイルが見つかりません");
+		if (fileName == null || fileName.isEmpty()) {
+			throw new RuntimeException("指定されたファイルが存在しません。");
 		}
 
+		// 构建文件路径
 		Path filePath = Paths.get(FILE_DIRECTORY, fileName);
+
 		try {
+			// 创建资源对象
 			Resource resource = new UrlResource(filePath.toUri());
-			if (resource.exists() && resource.isReadable()) {
-				return resource;
-			} else {
-				throw new RuntimeException("ファイルが読み取れません");
+
+			// 检查资源是否存在并可读
+			if (!resource.exists() || !resource.isReadable()) {
+				throw new RuntimeException("ファイルが存在しないか、読み取ることができません。");
 			}
+
+			return resource; // 返回资源对象
 		} catch (IOException e) {
-			throw new RuntimeException("ファイルのダウンロードに失敗しました", e); // IOException をキャッチ
+			// 捕获并处理异常
+			throw new RuntimeException("ファイルのダウンロード中にエラーが発生しました。", e);
 		}
 	}
 

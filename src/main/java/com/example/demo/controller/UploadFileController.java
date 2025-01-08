@@ -34,12 +34,15 @@ import com.example.demo.utill.Pager;
 @Controller
 public class UploadFileController {
 
-	private String FILE_DIRECTORY = "D:/Users/hqq/oa/OA-System/src/main/resources/uploads";
-
 	@Autowired
 	private UploadedFileService fileService;
 	@Autowired
 	private UploadFileMapper uploadFileMapper;
+
+	@GetMapping("/userfile")
+	public String home() {
+		return "userfile";
+	}
 
 	@PostMapping("/file")
 	@ResponseBody
@@ -68,6 +71,7 @@ public class UploadFileController {
 	@ResponseBody
 	public ResponseEntity<?> getFileList(@RequestParam(required = false) String name,
 			@RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "5") int size) {
+
 		Pager<UploadFile> pager = fileService.getFilesByPage(page, size, name);
 		return ResponseEntity.ok(pager);
 
