@@ -31,6 +31,9 @@ import com.example.demo.mapper.UploadFileMapper;
 import com.example.demo.service.UploadedFileService;
 import com.example.demo.utill.Pager;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
+
 @Controller
 public class UploadFileController {
 
@@ -58,10 +61,15 @@ public class UploadFileController {
 
 	// ファイルの取得（ページング） - 返回 HTML 页面
 	@GetMapping("/file")
-	public String getFiles(Model model, @RequestParam(required = false) String name,
+	public String getFiles(HttpServletRequest request, Model model, @RequestParam(required = false) String name,
 			@RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "5") int size) {
 		Pager<UploadFile> pager = fileService.getFilesByPage(page, size, name);
+		HttpSession session = request.getSession();
+		Object syokuiObj = session.getAttribute("Syokui");
+		String syokui = syokuiObj != null ? syokuiObj.toString() : "";
+		System.out.println("Syokui: " + syokui);
 		model.addAttribute("pager", pager);
+		model.addAttribute("Syokui", syokui);
 		return "file";
 
 	}

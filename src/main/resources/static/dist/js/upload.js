@@ -95,32 +95,56 @@ $(document).ready(function () {
         return;
     }
 
-    files.forEach(function (file) {
-        const $fileItem = $(`
-            <tr data-file-id="${file.id}">
-                <td><input type="checkbox" class="select-file-checkbox" /></td>
-                <td class="file-name" title="${file.name}">${file.name}</td>
-                <td>
-                    <button class="download-btn">ダウンロード</button>
-                    <button class="delete-btn">削除</button>
-                    <button class="status-btn">${file.isPublic === 1 ? "非公開に設定" : "公開に設定"}</button>
-                </td>
-                <td>${file.isPublic === 1 ? "公開" : "非公開"}</td>
-            </tr>
-        `);
+	const syokui = $("#syokui").val();
+	console.log("Syokui value: ", syokui);
 
-        // 绑定事件处理
-        $fileItem.find(".download-btn").click(() => downloadFile(file.id));
-        $fileItem.find(".delete-btn").click(() => deleteFile(file.id));
-        $fileItem.find(".status-btn").click(() => {
-            toggleFileStatus(file.id, file.isPublic);  
-        });
+	if (syokui == 1) {
+	    files.forEach(function (file) {
+	        const $fileItem = $(`
+	            <tr data-file-id="${file.id}">
+	                <td><input type="checkbox" class="select-file-checkbox" /></td>
+	                <td class="file-name" title="${file.name}">${file.name}</td>
+	                <td>
+	                    <button class="download-btn">ダウンロード</button>
+	                    <button class="delete-btn">削除</button>
+	                    <button class="status-btn">${file.isPublic === 1 ? "非公開に設定" : "公開に設定"}</button>
+	                </td>
+	                <td>${file.isPublic === 1 ? "公開" : "非公開"}</td>
+	            </tr>
+	        `);
 
-        $fileList.append($fileItem);  
-    });
+	        // 绑定事件处理
+	        $fileItem.find(".download-btn").click(() => downloadFile(file.id));
+	        $fileItem.find(".delete-btn").click(() => deleteFile(file.id));
+	        $fileItem.find(".status-btn").click(() => {
+	            toggleFileStatus(file.id, file.isPublic);
+	        });
 
-    updateSelectAllCheckbox();  // 更新全选复选框
-  }
+	        $fileList.append($fileItem);
+	    });
+	} else {
+	    files.forEach(function (file) {
+	        const $fileItem = $(`
+	            <tr data-file-id="${file.id}">
+	                <td><input type="checkbox" class="select-file-checkbox" /></td>
+	                <td class="file-name" title="${file.name}">${file.name}</td>
+	                <td>
+	                    <button class="download-btn">ダウンロード</button>
+	                </td>
+	            </tr>
+	        `);
+
+	        // 绑定事件处理
+	        $fileItem.find(".download-btn").click(() => downloadFile(file.id));
+			
+			           $("#deleteSelectedBtn").hide(); // 显示按钮
+			   
+	        $fileList.append($fileItem);
+	    });
+	}
+
+	updateSelectAllCheckbox(); // 更新全选复选框
+}
 
   function deleteFile(fileId) {
     // 确认删除弹窗
