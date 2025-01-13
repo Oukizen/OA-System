@@ -3,6 +3,8 @@ package com.example.demo.controller;
 import java.util.List;
 import java.util.Map;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -32,15 +34,21 @@ public class UserController {
     private UploadedFileService uploadedFileService;
 
     @GetMapping("/yonghu")
-    public String showUserPage() {
-        return "yonghu";
+    public String showUserPage(HttpServletRequest request) {
+        HttpSession session = request.getSession(false); // 获取当前会话（如果有）
+        if (session == null || session.getAttribute("Syokui") == null) {            // 如果没有会话或会话中没有登录信息，重定向到登录页面
+            return "redirect:/login";
+        }
+        return "yonghu"; //
     }
-
     @GetMapping("/yonghuxq")
-    public String showUserPage2() {
-        return "yonghuxq";
+    public String showUserPage2(HttpServletRequest request) {
+        HttpSession session = request.getSession(false); // 获取当前会话（如果有）
+        if (session == null || session.getAttribute("Syokui") == null) {            // 如果没有会话或会话中没有登录信息，重定向到登录页面
+            return "redirect:/login";
+        }
+        return "yonghuxq"; //
     }
-
     @PostMapping("/yonghu/save")
     @ResponseBody
     public User saveUser(@RequestBody User user) {
