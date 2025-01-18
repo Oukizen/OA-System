@@ -154,13 +154,17 @@ function logout() {
         url: '/logout',
         method: 'POST',
         contentType: 'application/json',
-        xhrFields: { withCredentials: true },
-        success: function() {
-            alert('您已成功退出登录');
-            window.location.href = '/login';
+        xhrFields: { withCredentials: true }, // 如果有跨域需求
+        success: function(response) {
+            if (response.status === 'success') {
+                alert('ログアウトが完了しました。');
+                window.location.href = '/login';
+            } else {
+                alert('ログアウトに失敗しました。もう一度お試しください。');
+            }
         },
         error: function() {
-            alert('退出登录失败，请重试！');
+            alert('ログアウトに失敗しました。もう一度お試しください。');
         }
     });
 }
