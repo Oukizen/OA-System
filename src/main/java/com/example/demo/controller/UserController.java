@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.ui.Model;
 
 import com.example.demo.entity.User;
 import com.example.demo.service.UserService;
@@ -34,13 +36,26 @@ public class UserController {
     private UploadedFileService uploadedFileService;
 
     @GetMapping("/yonghu")
-    public String showUserPage(HttpServletRequest request) {
+    public String showUserPage(HttpServletRequest request, Model model) {
         HttpSession session = request.getSession(false); // 获取当前会话（如果有）
-        if (session == null || session.getAttribute("Syokui") == null) {            // 如果没有会话或会话中没有登录信息，重定向到登录页面
-            return "redirect:/login";
+
+        if (session == null || session.getAttribute("Syokui") == null) {
+            // 如果没有会话或会话中没有登录信息，返回提示消息
+            model.addAttribute("message", "未登录，请重新登录");
+            return "redirect:/login"; // 返回登录页面
         }
-        return "yonghu"; //
+
+        Object syokui = session.getAttribute("Syokui");
+        if (!"1".equals(String.valueOf(syokui))) {
+            // 如果 Syokui 不是 "1"，跳转到权限不足页面
+            model.addAttribute("message", "権限が不足しており、このページにアクセスできません。");
+            return "accessDenied"; // 跳转到权限不足页面
+        }
+
+        return "yonghu"; // 正常显示用户页面
     }
+
+
     @GetMapping("/yonghuxq")
     public String showUserPage2(HttpServletRequest request) {
         HttpSession session = request.getSession(false); // 获取当前会话（如果有）
@@ -49,6 +64,18 @@ public class UserController {
         }
         return "yonghuxq"; //
     }
+    @PostMapping("/logout")
+    @ResponseBody
+    public Map<String, String> logout(HttpServletRequest request) {
+        HttpSession session = request.getSession(false); // 获取当前会话（如果有）
+        if (session != null) {
+            session.invalidate(); // 使会话无效
+        }
+        Map<String, String> response = new HashMap<>();
+        response.put("status", "success");
+        return response;
+    }
+
     @PostMapping("/yonghu/save")
     @ResponseBody
     public User saveUser(@RequestBody User user) {
@@ -144,3 +171,4 @@ public class UserController {
         }
     }
 }
+

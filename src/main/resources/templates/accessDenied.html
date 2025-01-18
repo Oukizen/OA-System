@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="zh">
+<link href="dist/css/accessDenied.css" rel="stylesheet">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>権限が不足</title>
+</head>
+<body>
+<div>
+  <h1>権限が不足</h1>
+  <p th:text="${message}">権限が不足しており、このページにアクセスできません。</p>
+  <a th:href="@{/home}">ホームに戻る</a>
+</div>
+</body>
+</html>

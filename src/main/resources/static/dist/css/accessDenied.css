@@ -1,0 +1,30 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #233242FF; /* 设置背景颜色 */
+    color: white; /* 设置字体颜色 */
+    height: 100vh; /* 设置页面高度为视口高度 */
+    margin: 0;
+    display: flex;
+    justify-content: center; /* 水平居中 */
+    align-items: center; /* 垂直居中 */
+    text-align: center;
+}
+h1 {
+    font-size: 2rem;
+    margin-bottom: 20px;
+}
+p {
+    font-size: 1.2rem;
+    margin-bottom: 30px;
+}
+a {
+    font-size: 1rem;
+    color: white;
+    text-decoration: none;
+    padding: 10px 20px;
+    background-color: #576574; /* 设置按钮的背景颜色 */
+    border-radius: 5px;
+}
+a:hover {
+    background-color: #47525d; /* 设置按钮悬停时的颜色 */
+}
