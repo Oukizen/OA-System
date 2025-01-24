@@ -179,37 +179,35 @@ $(document).ready(function () {
       }
     }
 
-    $pagination.empty();
-    const $prevPage = $("<button>前のページ</button>");
-    $prevPage.prop("disabled", currentPage === 1).click(function () {
-      if (currentPage > 1) {
-        currentPage--;
-        fetchFiles();
+	$pagination.empty();
+	  const $prevPage = $("<button>前のページ</button>");
+	  $prevPage.prop("disabled", currentPage === 1).click(function () {
+	    if (currentPage > 1) {
+	      currentPage--;
+	      fetchFiles();
+	    }
+	  });
+
+	  const $nextPage = $("<button>次のページ</button>");
+	  $nextPage.prop("disabled", currentPage === totalPages).click(function () {
+	    if (currentPage < totalPages) {
+	      currentPage++;
+	      fetchFiles();
+	    }
+	  });
+
+   $pagination.append($prevPage);
+   for (let i = startPage; i <= endPage; i++) {
+        const $pageButton = $(`<button>${i}</button>`);
+        $pageButton.prop("disabled", i === currentPage).click(function () {
+          currentPage = i;
+          fetchFiles();
+        });
+        $pagination.append($pageButton);
       }
-    });
 
-    const $nextPage = $("<button>次のページ</button>");
-    $nextPage.prop("disabled", currentPage === totalPages).click(function () {
-      if (currentPage < totalPages) {
-        currentPage++;
-        fetchFiles();
-      }
-    });
-
-    $pagination.append($prevPage);
-
-    for (let i = startPage; i <= endPage; i++) {
-      const $pageButton = $(`<button>${i}</button>`);
-      $pageButton.prop("disabled", i === currentPage).click(function () {
-        currentPage = i;
-        fetchFiles();
-      });
-      $pagination.append($pageButton);
+      $pagination.append($nextPage);
     }
-
-    $pagination.append($nextPage);
-  }
-
   $("#selectAllCheckbox").click(function () {
     const isChecked = $(this).prop("checked");  // 获取全选框是否被选中
     $(".select-file-checkbox").prop("checked", isChecked);  // 设置所有复选框的状态

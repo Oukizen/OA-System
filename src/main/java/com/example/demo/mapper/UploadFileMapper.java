@@ -45,9 +45,6 @@ public interface UploadFileMapper {
 	@Select("SELECT name FROM file WHERE id = #{fileId}")
 	String getFileNameById(Long fileId);
 
-	@Select("SELECT url FROM file WHERE id = #{fileId}")
-	String getFileUrlById(Long fileId);
-
 	@Delete("<script>" + "DELETE FROM file WHERE id IN "
 			+ "<foreach item='id' collection='ids' open='(' separator=',' close=')'>" + "#{id}" + "</foreach>"
 			+ "</script>")

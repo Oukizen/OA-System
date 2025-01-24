@@ -139,15 +139,6 @@ public class UploadedFileServiceImpl implements UploadedFileService {
 		return true;
 	}
 
-	// ファイル URL を取得
-	public String getFileUrlById(Long fileId) {
-		String fileUrl = uploadFileMapper.getFileUrlById(fileId);
-		if (fileUrl == null) {
-			throw new RuntimeException("ファイル URL が見つかりません");
-		}
-		return fileUrl;
-	}
-
 	// ファイル名を取得
 	public String getFileNameById(Long fileId) {
 		return uploadFileMapper.getFileNameById(fileId); // 元のファイル名を取得

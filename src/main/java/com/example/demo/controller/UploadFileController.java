@@ -2,6 +2,7 @@ package com.example.demo.controller;
 
 import java.io.IOException;
 import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -140,26 +141,46 @@ public class UploadFileController {
 	@ResponseBody
 	public ResponseEntity<Resource> downloadFile(@PathVariable Long fileId) {
 		try {
+			// 获取原始文件名
 			String originalFileName = fileService.getFileNameById(fileId);
+			System.out.println(originalFileName);
 
+			// 获取文件的扩展名（后缀）
+			String fileExtension = "";
+			int dotIndex = originalFileName.lastIndexOf('.');
+			if (dotIndex > 0) {
+				fileExtension = originalFileName.substring(dotIndex); // 获取后缀名，如 ".txt"
+			}
+
+			// 设置新的中文文件名（不改变后缀）
+			String newFileName = "wenjian" + fileExtension; // 使用中文名字
+
+			// 获取文件路径
 			UploadFile uploadedFile = uploadFileMapper.getFileById(fileId);
 			Path filePath = Paths.get(uploadedFile.getUrl());
 
+			// 创建资源对象
 			Resource resource = new UrlResource(filePath.toUri());
 
 			if (Files.exists(filePath) && Files.isReadable(filePath)) {
 
+				// 获取文件类型（MIME类型）
 				String contentType = Files.probeContentType(filePath);
 				if (contentType == null) {
 					contentType = "application/octet-stream";
 				}
 
-				String encodedFileName = URLEncoder.encode(originalFileName, "UTF-8").replace("+", "%20");
+				// 对新的中文文件名进行编码处理
+				String encodedFileName = URLEncoder.encode(newFileName, StandardCharsets.UTF_8).replace("+", "%20");
+
+				// 设置响应头，指示浏览器下载文件时使用新的中文文件名
 				String contentDisposition = "attachment; filename=\"" + encodedFileName + "\"";
 
+				// 返回文件资源，设置相应的头部信息
 				return ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION, contentDisposition)
 						.header(HttpHeaders.CONTENT_TYPE, contentType)
 						.header(HttpHeaders.CONTENT_LENGTH, String.valueOf(Files.size(filePath))).body(resource);
+
 			} else {
 				return ResponseEntity.notFound().build();
 			}
